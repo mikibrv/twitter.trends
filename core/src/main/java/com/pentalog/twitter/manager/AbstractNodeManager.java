@@ -1,7 +1,10 @@
 package com.pentalog.twitter.manager;
 
 import com.pentalog.twitter.pojo.Node;
+import org.apache.camel.model.ModelCamelContext;
+import org.springframework.context.ApplicationContext;
 
+import javax.annotation.Resource;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -15,6 +18,7 @@ public abstract class AbstractNodeManager {
 
     protected Set<Node> clusterNodes = new HashSet<Node>();
     protected Node node;
+    protected ModelCamelContext camelContext;
 
     public AbstractNodeManager(Node node) {
         this.node = node;
@@ -29,5 +33,10 @@ public abstract class AbstractNodeManager {
         return null;
     }
 
+    public void initRoutes() {
+    }
 
+    public void setCamelContext(ModelCamelContext camelContext) {
+        this.camelContext = camelContext;
+    }
 }

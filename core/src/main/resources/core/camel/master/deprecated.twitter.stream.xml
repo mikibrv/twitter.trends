@@ -1,0 +1,6 @@
+<routes xmlns="http://camel.apache.org/schema/spring">
+    <route id="rutaTwitterStream">
+        <from uri="twitter://streaming/sample?delay=30&amp;type=polling&amp;consumerKey=ishlc3B1unAHgZHUNlDtlt6gY&amp;consumerSecret=x09zD2v8jvr3zG9hkRtTj9nHUS6l76BLJQQXD9I4mNq80EHEi4&amp;accessToken=2863572561-zGZTJP6QtOV23jEv8BASWNGjXbRiitM2jm0n5mO&amp;accessTokenSecret=sX7vN9u3LORK5q57xfQf6mfCq2WECB840GpL6Vkds2u50"/>
+        <process ref="httpProcessor"/>
+    </route>
+</routes>
