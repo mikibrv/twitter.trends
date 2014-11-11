@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="
+       http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+       http://www.springframework.org/schema/context
+       http://www.springframework.org/schema/context/spring-context-2.5.xsd
+       http://camel.apache.org/schema/spring
+       http://camel.apache.org/schema/spring/camel-spring.xsd">
+
+    <context:property-placeholder location='core/cluster.properties'/>
+
+    <bean id="nodeManagerFactory" class="com.pentalog.twitter.manager.factory.NodeManagerFactory"/>
+
+    <bean id="nodeManager" factory-bean="nodeManagerFactory" factory-method="createNodeManager"/>
+
+
+    <camelContext id="camelContext" xmlns="http://camel.apache.org/schema/spring">
+        <!--
+<route id="ruta01">
+   <from uri="jetty:http://localhost:7070/myservice"/>
+   <process ref="httpProcessor"/>
+</route>
+<route id="ruta02">
+   <from uri="jetty:http://localhost:7070/asd"/>
+   <process ref="httpProcessor"/>
+</route>
+
+
+<route id="rutaTwitter">
+<from uri="twitter://search/?type=polling&amp;delay=10&amp;keywords=brasov&amp;consumerKey=ishlc3B1unAHgZHUNlDtlt6gY&amp;consumerSecret=x09zD2v8jvr3zG9hkRtTj9nHUS6l76BLJQQXD9I4mNq80EHEi4&amp;accessToken=2863572561-zGZTJP6QtOV23jEv8BASWNGjXbRiitM2jm0n5mO&amp;accessTokenSecret=sX7vN9u3LORK5q57xfQf6mfCq2WECB840GpL6Vkds2u50"/>
+<process ref="twitterBeanProcessor"/>
+</route>
+
+
+
+
+<route id="rutaTwitterStream">
+<from uri="twitter://streaming/sample?delay=30&amp;type=polling&amp;consumerKey=ishlc3B1unAHgZHUNlDtlt6gY&amp;consumerSecret=x09zD2v8jvr3zG9hkRtTj9nHUS6l76BLJQQXD9I4mNq80EHEi4&amp;accessToken=2863572561-zGZTJP6QtOV23jEv8BASWNGjXbRiitM2jm0n5mO&amp;accessTokenSecret=sX7vN9u3LORK5q57xfQf6mfCq2WECB840GpL6Vkds2u50"/>
+<process ref="twitterBeanProcessor"/>
+</route>
+
+
+<route id="ruta04">
+<from uri="webapp:foo"/>
+<to uri="webapp:foo"/>
+</route>
+ -->
+
+    </camelContext>
+
+</beans>
