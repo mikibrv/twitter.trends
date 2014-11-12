@@ -11,16 +11,14 @@ import twitter4j.Status;
  */
 public class TwitterBeanProcessor implements Processor {
 
-    long tweetsCaptured = 0L;
+	long tweetsCaptured = 0L;
 
+	@Override
+	public void process(Exchange exchange) throws Exception {
 
-    @Override
-    public void process(Exchange exchange) throws Exception {
-        Status tweet = (Status) exchange.getIn().getBody();
-        String lang = tweet.getLang();
-        if (lang.equals("en")) {
-            System.out.println(tweetsCaptured);
-            tweetsCaptured++;
-        }
-    }
+		Status tweet = (Status) exchange.getIn().getBody();
+		String lang = tweet.getLang();
+		System.out.println(tweetsCaptured);
+		tweetsCaptured++;
+	}
 }

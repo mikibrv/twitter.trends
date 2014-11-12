@@ -69,6 +69,18 @@
                 <version>${camel.version}</version>
             </dependency>
 
+            <dependency>
+                <groupId>org.apache.camel</groupId>
+                <artifactId>camel-mongodb</artifactId>
+                <version>${camel.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.apache.camel</groupId>
+                <artifactId>camel-xmljson</artifactId>
+                <version>${camel.version}</version>
+            </dependency>
+
             <!-- Twitter 4j -->
             <dependency>
                 <groupId>org.twitter4j</groupId>
