@@ -1,0 +1,34 @@
+package com.pentalog.twitter.manager.factory;
+
+import com.pentalog.twitter.interfaces.IMasterNode;
+import com.pentalog.twitter.interfaces.ISlaveNode;
+import com.pentalog.twitter.manager.impl.MasterNodeController;
+import com.pentalog.twitter.manager.impl.SlaveNodeController;
+import org.apache.camel.CamelContext;
+import org.apache.camel.model.ModelCamelContext;
+
+/**
+ * User: mcsere
+ * Date: 11/14/2014
+ * Time: 5:33 PM
+ */
+public class NodeControllerBuilder {
+
+    private ModelCamelContext camelContext;
+
+    public NodeControllerBuilder setCamelContext(ModelCamelContext camelContext) {
+        this.camelContext = camelContext;
+        return this;
+    }
+
+    public IMasterNode buildMaster() {
+        MasterNodeController masterNode = new MasterNodeController();
+        return masterNode;
+    }
+
+    public ISlaveNode buildSlave() {
+        SlaveNodeController slaveNode = new SlaveNodeController();
+        return slaveNode;
+    }
+
+}

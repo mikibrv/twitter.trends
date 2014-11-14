@@ -2,25 +2,42 @@
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:util="http://www.springframework.org/schema/util"
        xsi:schemaLocation="
        http://www.springframework.org/schema/beans
        http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
        http://www.springframework.org/schema/context
-       http://www.springframework.org/schema/context/spring-context-2.5.xsd">
+       http://www.springframework.org/schema/context/spring-context-2.5.xsd
+           http://www.springframework.org/schema/util
+       http://www.springframework.org/schema/util/spring-util-2.5.xsd">
 
-    <context:property-placeholder location='core/*.properties'/>
+
+    <import resource="activemq/activemq-broker.xml"/>
+    <import resource="camel/camel-context.xml"/>
+
+
+    <bean id="propertyConfigurer" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+        <property name="locations">
+            <list>
+                <value>classpath:core/cluster.properties</value>
+                <value>classpath:core/twitter.properties</value>
+            </list>
+        </property>
+        <property name="ignoreUnresolvablePlaceholders" value="true"/>
+    </bean>
 
     <context:component-scan base-package="com.pentalog.twitter"/>
-    <context:annotation-config />
+    <context:annotation-config/>
 
-    <import resource="camel/camelContext.xml"/>
-
-    <bean id="nodeManagerFactory" class="com.pentalog.twitter.manager.factory.NodeManagerFactory">
+    <bean id="nodeManagerFactory" class="com.pentalog.twitter.manager.factory.NodeControllerFactory">
+        <constructor-arg index="0">
+            <util:constant static-field="com.pentalog.twitter.NodeLauncher.NODE_TYPE"/>
+        </constructor-arg>
         <property name="masterIP" value="${cluster.master.IP}"/>
         <property name="camelContext" ref="camelContext"/>
     </bean>
 
-    <bean id="nodeManager" factory-bean="nodeManagerFactory" factory-method="createNodeManager"/>
+    <bean id="nodeManager" lazy-init="true" factory-bean="nodeManagerFactory" factory-method="createNodeManager"/>
 
 
     <bean id="twitterProps"

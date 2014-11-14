@@ -1,7 +1,6 @@
 package com.pentalog.twitter;
 
-import com.pentalog.twitter.manager.INodeManager;
-import com.pentalog.twitter.manager.factory.NodeManagerFactory;
+import org.apache.camel.model.ModelCamelContext;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
@@ -12,8 +11,13 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
  */
 public class NodeLauncher {
 
-    public static void main(String[] args) {
-        NodeManagerFactory.setNodeType(args);  //from maven profile
+    public static String NODE_TYPE;
+
+    public static void main(String[] args) throws InterruptedException {
+        if (args.length > 0) {
+            NODE_TYPE = args[0];
+        }
         ApplicationContext applicationContext = new ClassPathXmlApplicationContext("core/applicationContext.xml");
+        ModelCamelContext context = (ModelCamelContext) applicationContext.getBean("camelContext");
     }
 }

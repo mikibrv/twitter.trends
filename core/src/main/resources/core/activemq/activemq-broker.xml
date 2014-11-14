@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:broker="http://activemq.apache.org/schema/core"
+       xsi:schemaLocation="
+         http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+         http://activemq.apache.org/schema/core http://activemq.apache.org/schema/core/activemq-core.xsd">
+
+    <!-- setup a real ActiveMQ broker which listen on port 61616 -->
+    <broker:broker useJmx="false" persistent="false" brokerName="myBroker">
+        <broker:transportConnectors>
+            <broker:transportConnector name="tcp" uri="tcp://localhost:61616"/>
+        </broker:transportConnectors>
+    </broker:broker>
+
+</beans>
