@@ -1,8 +1,13 @@
 package com.pentalog.twitter.manager;
 
+import com.pentalog.twitter.manager.wrapper.NodeProxy;
 import com.pentalog.twitter.pojo.Node;
+import org.apache.camel.model.ModelCamelContext;
 
+import javax.annotation.Resource;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -11,13 +16,35 @@ import java.util.Set;
  * Time: 12:45 PM
  */
 public abstract class AbstractNodeController {
-    protected Node node;
 
-    protected Set<Node> clusterNodes = new HashSet<Node>();
+    protected List<NodeProxy> clusterNodes = new ArrayList<>();
 
-    public Set<Node> getClusterNodes() {
-        return this.clusterNodes;
+    @Resource(name = "camelContext")
+    ModelCamelContext camelContext;
+
+    public long ping(Long timeStart) {
+        System.out.println("ceva");
+        return System.currentTimeMillis() - timeStart;
     }
 
+    public void addNode(Node node) {
 
+        NodeProxy nodeProxy = new NodeProxy(node);
+        try {
+            nodeProxy.buildProxy(camelContext);
+        } catch (Exception e) {
+            e.printStackTrace();
+            //failed to add node.
+        }
+
+    }
+
+    protected NodeProxy getMasterNode() {
+        for (NodeProxy nodeProxy : clusterNodes) {
+            if (nodeProxy.getNode().isMaster()) {
+                return nodeProxy;
+            }
+        }
+        return null;//kind of dumb isn't it?
+    }
 }

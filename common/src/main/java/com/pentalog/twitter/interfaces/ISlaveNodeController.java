@@ -5,5 +5,8 @@ package com.pentalog.twitter.interfaces;
  * Date: 11/14/2014
  * Time: 5:05 PM
  */
-public interface IMasterNode extends INode {
+public interface ISlaveNodeController extends INodeController {
+
+
+
 }

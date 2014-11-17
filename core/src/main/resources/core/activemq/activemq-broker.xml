@@ -10,7 +10,7 @@
     <!-- setup a real ActiveMQ broker which listen on port 61616 -->
     <broker:broker useJmx="false" persistent="false" brokerName="myBroker">
         <broker:transportConnectors>
-            <broker:transportConnector name="tcp" uri="tcp://localhost:61616"/>
+            <broker:transportConnector name="tcp" uri="tcp://localhost:${cluster.local.jms.port}"/>
         </broker:transportConnectors>
     </broker:broker>
 

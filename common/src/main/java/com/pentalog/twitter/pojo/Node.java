@@ -14,6 +14,8 @@ public class Node implements Serializable {
 
     private String IP;
 
+    private Integer JMSPort;
+
     private NodeType type = NodeType.SLAVE;
 
     public Node(String uuid, String IP) {
@@ -52,6 +54,14 @@ public class Node implements Serializable {
 
     public Boolean isSlave() {
         return !isMaster();
+    }
+
+    public Integer getJMSPort() {
+        return JMSPort;
+    }
+
+    public void setJMSPort(Integer JMSPort) {
+        this.JMSPort = JMSPort;
     }
 
     @Override

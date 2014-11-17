@@ -1,10 +1,9 @@
 package com.pentalog.twitter.manager.factory;
 
-import com.pentalog.twitter.interfaces.IMasterNode;
-import com.pentalog.twitter.interfaces.ISlaveNode;
-import com.pentalog.twitter.manager.impl.MasterNodeController;
-import com.pentalog.twitter.manager.impl.SlaveNodeController;
-import org.apache.camel.CamelContext;
+import com.pentalog.twitter.interfaces.IMasterNodeController;
+import com.pentalog.twitter.interfaces.ISlaveNodeController;
+import com.pentalog.twitter.manager.impl.MasterNodeControllerController;
+import com.pentalog.twitter.manager.impl.SlaveNodeControllerController;
 import org.apache.camel.model.ModelCamelContext;
 
 /**
@@ -21,13 +20,13 @@ public class NodeControllerBuilder {
         return this;
     }
 
-    public IMasterNode buildMaster() {
-        MasterNodeController masterNode = new MasterNodeController();
+    public IMasterNodeController buildMaster() {
+        MasterNodeControllerController masterNode = new MasterNodeControllerController();
         return masterNode;
     }
 
-    public ISlaveNode buildSlave() {
-        SlaveNodeController slaveNode = new SlaveNodeController();
+    public ISlaveNodeController buildSlave() {
+        SlaveNodeControllerController slaveNode = new SlaveNodeControllerController();
         return slaveNode;
     }
 
