@@ -27,7 +27,7 @@ public class NodeUtil {
     }
 
     public static ISlaveNodeController buildProxySlave(Node node, ModelCamelContext context) throws Exception {
-        return new ProxyBuilder(context).endpoint(node.getUuid() + ":queue:" + RouteConstants.NODE_ACTIVE_MQ_REQ).build(ISlaveNodeController.class);
+        return new ProxyBuilder(context).endpoint(node.getUuid() + ":queue:" + RouteConstants.SLAVE_QUEUE).build(ISlaveNodeController.class);
     }
 
     public static IMasterNodeController buildProxyMaster(Node node, ModelCamelContext context) throws Exception {

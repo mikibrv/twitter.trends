@@ -9,7 +9,7 @@ public abstract class RouteConstants {
 
     public static String ROUTE_MASTER_STREAM = "twitterTOQueueRoute";
 
-    public static String NODE_ACTIVE_MQ_REQ = "SLAVE";
+    public static String SLAVE_QUEUE = "SLAVE";
 
     public static String MASTER_QUEUE = "MASTER";
 

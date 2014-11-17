@@ -32,7 +32,7 @@ public class NodeBuilder {
         Node node = null;
 
         try {
-            node = new Node(RouteConstants.NODE_ACTIVE_MQ_REQ + UUID.randomUUID().toString().replaceAll("-", ""), InetAddress.getLocalHost().getCanonicalHostName());
+            node = new Node(RouteConstants.SLAVE_QUEUE + UUID.randomUUID().toString().replaceAll("-", ""), InetAddress.getLocalHost().getCanonicalHostName());
             node.setType(this.nodeType);
             node.setJMSPort(jmsPort);
         } catch (UnknownHostException e) {

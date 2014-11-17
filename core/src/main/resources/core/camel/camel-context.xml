@@ -29,14 +29,12 @@
 
         <route>
             <from uri="activemq:queue:MASTER"/>
-            <process ref="testTwitterBeanProcessor"/>
             <to uri="bean:masterController"/>
         </route>
 
 
         <route>
             <from uri="activemq:queue:SLAVE"/>
-            <process ref="testTwitterBeanProcessor"/>
             <to uri="bean:slaveController"/>
         </route>
 

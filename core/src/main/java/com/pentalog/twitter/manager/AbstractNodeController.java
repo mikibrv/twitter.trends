@@ -34,6 +34,7 @@ public abstract class AbstractNodeController {
         NodeProxy nodeProxy = new NodeProxy(node);
         try {
             nodeProxy.buildProxy(camelContext);
+            this.clusterNodes.add(nodeProxy);
         } catch (Exception e) {
             e.printStackTrace();
             //failed to add node.
