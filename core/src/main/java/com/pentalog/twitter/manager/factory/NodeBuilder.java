@@ -1,5 +1,6 @@
 package com.pentalog.twitter.manager.factory;
 
+import com.pentalog.twitter.manager.enums.RouteConstants;
 import com.pentalog.twitter.manager.exceptions.NOInternetException;
 import com.pentalog.twitter.pojo.Node;
 import com.pentalog.twitter.pojo.NodeType;
@@ -31,7 +32,7 @@ public class NodeBuilder {
         Node node = null;
 
         try {
-            node = new Node(UUID.randomUUID().toString(), InetAddress.getLocalHost().getCanonicalHostName());
+            node = new Node(RouteConstants.NODE_ACTIVE_MQ_REQ + UUID.randomUUID().toString().replaceAll("-", ""), InetAddress.getLocalHost().getCanonicalHostName());
             node.setType(this.nodeType);
             node.setJMSPort(jmsPort);
         } catch (UnknownHostException e) {

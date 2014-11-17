@@ -79,4 +79,14 @@ public class Node implements Serializable {
     public int hashCode() {
         return uuid.hashCode();
     }
+
+    @Override
+    public String toString() {
+        return "Node{" +
+                "uuid='" + uuid + '\'' +
+                ", IP='" + IP + '\'' +
+                ", JMSPort=" + JMSPort +
+                ", type=" + type +
+                '}';
+    }
 }

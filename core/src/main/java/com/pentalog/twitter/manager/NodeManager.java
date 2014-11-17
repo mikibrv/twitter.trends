@@ -5,6 +5,7 @@ import com.pentalog.twitter.interfaces.ISlaveNodeController;
 import com.pentalog.twitter.manager.enums.RouteConstants;
 import com.pentalog.twitter.pojo.Node;
 import com.pentalog.twitter.util.NodeUtil;
+import org.apache.camel.Route;
 import org.apache.camel.model.ModelCamelContext;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -41,6 +42,11 @@ public class NodeManager {
         //if slave, call master
         switch (node.getType()) {
             case MASTER: {
+                try {
+                    camelContext.startRoute(RouteConstants.ROUTE_MASTER_STREAM);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
                 break;
             }
             case SLAVE: {
@@ -49,8 +55,7 @@ public class NodeManager {
                 NodeUtil.addActiveMQComponent(RouteConstants.MASTER_QUEUE, NodeUtil.getJMSPathFromIP(masterNode.getIP(), masterNode.getJMSPort()), camelContext);
                 try {
                     IMasterNodeController masterProxy = NodeUtil.buildProxyMaster(masterNode, camelContext);
-
-                    System.out.println(masterProxy.ping(System.currentTimeMillis()));
+                    masterProxy.addNode(node);
 
                 } catch (Exception e) {
                     e.printStackTrace();

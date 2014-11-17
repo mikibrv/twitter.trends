@@ -21,6 +21,7 @@
 
         <route id="twitterTOQueueRoute" autoStartup="false">
             <from ref="twitterStreamEndpoint"/>
+            <process ref="testTwitterBeanProcessor"/>
             <to uri="seda:tweetsQueue"/>
         </route>
         <!-- End Of Master -->
@@ -33,8 +34,15 @@
         </route>
 
 
-        <route autoStartup="true">
-            <from uri="timer://runOnce?repeatCount=1&amp;delay=5000"/>
+        <route>
+            <from uri="activemq:queue:SLAVE"/>
+            <process ref="testTwitterBeanProcessor"/>
+            <to uri="bean:slaveController"/>
+        </route>
+
+
+        <route>
+            <from uri="timer://runOnce?repeatCount=1&amp;delay=500"/>
             <to uri="bean:nodeManager?method=buildNodes"/>
         </route>
 
