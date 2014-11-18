@@ -21,9 +21,11 @@
         <spring.version>3.2.11.RELEASE</spring.version>
         <junit.version>3.8.1</junit.version>
         <camel.version>2.14.0</camel.version>
-        <log4j.version>2.1</log4j.version>
+        <camel.activemq.version>5.6.0</camel.activemq.version>
+        <log4j.version>1.2.17</log4j.version>
         <twitter4j.version>4.0.2</twitter4j.version>
         <freemarker.version>2.3.20</freemarker.version>
+
 
         <jetty.port>8080</jetty.port>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -71,14 +73,20 @@
 
             <dependency>
                 <groupId>org.apache.camel</groupId>
-                <artifactId>camel-mongodb</artifactId>
+                <artifactId>camel-jms</artifactId>
                 <version>${camel.version}</version>
             </dependency>
 
             <dependency>
-                <groupId>org.apache.camel</groupId>
-                <artifactId>camel-xmljson</artifactId>
-                <version>${camel.version}</version>
+                <groupId>org.apache.activemq</groupId>
+                <artifactId>activemq-camel</artifactId>
+                <version>${camel.activemq.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.apache.activemq</groupId>
+                <artifactId>activemq-pool</artifactId>
+                <version>${camel.activemq.version}</version>
             </dependency>
 
             <!-- Twitter 4j -->
@@ -110,16 +118,9 @@
                 <version>${spring.version}</version>
             </dependency>
 
-            <!-- LOG4J -->
             <dependency>
-                <groupId>org.apache.logging.log4j</groupId>
-                <artifactId>log4j-api</artifactId>
-                <version>${log4j.version}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>org.apache.logging.log4j</groupId>
-                <artifactId>log4j-core</artifactId>
+                <groupId>log4j</groupId>
+                <artifactId>log4j</artifactId>
                 <version>${log4j.version}</version>
             </dependency>
 

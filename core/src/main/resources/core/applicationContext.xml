@@ -2,41 +2,47 @@
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:util="http://www.springframework.org/schema/util"
        xsi:schemaLocation="
        http://www.springframework.org/schema/beans
        http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
        http://www.springframework.org/schema/context
-       http://www.springframework.org/schema/context/spring-context-2.5.xsd">
-
-    <context:property-placeholder location='core/*.properties'/>
-
-    <context:component-scan base-package="com.pentalog.twitter"/>
-    <context:annotation-config />
-
-    <import resource="camel/camelContext.xml"/>
-
-    <bean id="nodeManagerFactory" class="com.pentalog.twitter.manager.factory.NodeManagerFactory">
-        <property name="masterIP" value="${cluster.master.IP}"/>
-        <property name="camelContext" ref="camelContext"/>
-    </bean>
-
-    <bean id="nodeManager" factory-bean="nodeManagerFactory" factory-method="createNodeManager"/>
+       http://www.springframework.org/schema/context/spring-context-2.5.xsd
+           http://www.springframework.org/schema/util
+       http://www.springframework.org/schema/util/spring-util-2.5.xsd">
 
 
-    <bean id="twitterProps"
-          class="org.springframework.beans.factory.config.PropertiesFactoryBean">
+    <bean id="propertyConfigurer" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
         <property name="locations">
             <list>
-                <value>core/twitter.properties</value>
+                <value>classpath:core/cluster.properties</value>
+                <value>classpath:core/twitter.properties</value>
+            </list>
+        </property>
+        <property name="ignoreUnresolvablePlaceholders" value="true"/>
+    </bean>
+
+    <bean id="masterIP" class="java.lang.String">
+        <constructor-arg value="${cluster.master.IP}"/>
+    </bean>
+
+    <bean id="masterController" class="com.pentalog.twitter.manager.impl.MasterNodeController"/>
+    <bean id="slaveController" class="com.pentalog.twitter.manager.impl.SlaveNodeController"/>
+
+
+    <import resource="activemq/activemq-broker.xml"/>
+    <import resource="camel/camel-context.xml"/>
+
+    <context:component-scan base-package="com.pentalog.twitter"/>
+    <context:annotation-config/>
+
+    <bean id="log4jInitializer" class="org.springframework.beans.factory.config.MethodInvokingFactoryBean">
+        <property name="staticMethod" value="org.springframework.util.Log4jConfigurer.initLogging"/>
+        <property name="arguments">
+            <list>
+                <value>classpath:core/logs/log4j.xml</value>
             </list>
         </property>
     </bean>
-
-    <bean id="twitterBean" class="com.pentalog.twitter.processor.TwitterBeanProcessor"/>
-
-    <bean id="mongoConnectionBean" class="com.mongodb.Mongo">
-        <constructor-arg index="0" value="79.141.1.187"/>
-    </bean>
-
 
 </beans>

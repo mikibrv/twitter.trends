@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="
+       http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+       http://camel.apache.org/schema/spring
+       http://camel.apache.org/schema/spring/camel-spring.xsd">
+
+    <bean id="testTwitterBeanProcessor" class="com.pentalog.twitter.processor.TwitterBeanProcessor"/>
+    <bean id="httpProcessor" class="com.pentalog.twitter.processor.HTTPProcessor"/>
+    <!-- camel activemq http://camel.apache.org/using-camelproxy.html component to connect to the broker   -->
+    <bean id="activemq" class="org.apache.activemq.camel.component.ActiveMQComponent">
+        <property name="brokerURL" value="tcp://localhost:${cluster.local.jms.port}"/>
+    </bean>
+
+    <camelContext id="camelContext" xmlns="http://camel.apache.org/schema/spring">
+        <!-- Master Routes -->
+        <endpoint id="twitterStreamEndpoint"
+                  uri="twitter://streaming/sample?delay=${twitter.stream.delay}&amp;type=${twitter.stream.type}&amp;consumerKey=${twitter.stream.consumerKey}&amp;consumerSecret=${twitter.stream.consumerSecret}&amp;accessToken=${twitter.stream.accessToken}&amp;accessTokenSecret=${twitter.stream.accessTokenSecret}"/>
+
+        <route id="twitterTOQueueRoute" autoStartup="false">
+            <from ref="twitterStreamEndpoint"/>
+            <process ref="testTwitterBeanProcessor"/>
+            <to uri="seda:tweetsQueue"/>
+        </route>
+        <!-- End Of Master -->
+
+
+        <route>
+            <from uri="activemq:queue:MASTER"/>
+            <to uri="bean:masterController"/>
+        </route>
+
+
+        <route>
+            <from uri="activemq:queue:SLAVE"/>
+            <to uri="bean:slaveController"/>
+        </route>
+
+
+        <route>
+            <from uri="timer://runOnce?repeatCount=1&amp;delay=500"/>
+            <to uri="bean:nodeManager?method=buildNodes"/>
+        </route>
+
+
+    </camelContext>
+
+</beans>
