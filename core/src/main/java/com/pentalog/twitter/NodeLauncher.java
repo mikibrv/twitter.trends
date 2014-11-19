@@ -16,6 +16,7 @@ public class NodeLauncher {
 
 
     public static void main(String[] args) throws InterruptedException, NOInternetException {
+
         /**
          * Create the current node;
          */
