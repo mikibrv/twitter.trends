@@ -3,6 +3,8 @@ package com.pentalog.twitter.interfaces;
 
 import com.pentalog.twitter.pojo.Node;
 
+import java.util.List;
+
 /**
  * User: mcsere
  * Date: 11/14/2014
@@ -20,4 +22,6 @@ public interface INodeController {
     public void addNode(Node node);
 
     public Node getMaster();
+
+    public void updateClusterNodes(List<Node> clusterNodes);
 }
