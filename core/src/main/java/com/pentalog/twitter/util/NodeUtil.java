@@ -36,12 +36,12 @@ public class NodeUtil {
 
     /**
      * @param name
-     * @param path    tcp://localhost:61616
+     * @param node    tcp://localhost:61616
      * @param context
      */
-    public static void addActiveMQComponent(String name, String path, ModelCamelContext context) {
+    public static void addActiveMQComponent(String name, Node node, ModelCamelContext context) {
         ActiveMQConfiguration activeMQConfiguration = new ActiveMQConfiguration();
-        activeMQConfiguration.setBrokerURL(path);
+        activeMQConfiguration.setBrokerURL(getJMSPathFromIP(node.getIP(), node.getJMSPort()));
         context.addComponent(name, new ActiveMQComponent());
     }
 

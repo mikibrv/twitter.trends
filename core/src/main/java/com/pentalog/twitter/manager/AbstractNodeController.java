@@ -36,8 +36,7 @@ public abstract class AbstractNodeController {
             nodeProxy.buildProxy(camelContext);
             this.clusterNodes.add(nodeProxy);
         } catch (Exception e) {
-            e.printStackTrace();
-            //failed to add node.
+            LOGGER.error(e);
         }
 
     }
@@ -58,5 +57,10 @@ public abstract class AbstractNodeController {
             }
         }
         return null;
+    }
+
+
+    public void updateClusterNodes(List<Node> clusterNodes) {
+
     }
 }

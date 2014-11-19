@@ -3,7 +3,10 @@ package com.pentalog.twitter.manager.impl;
 
 import com.pentalog.twitter.interfaces.ISlaveNodeController;
 import com.pentalog.twitter.manager.AbstractNodeController;
+import com.pentalog.twitter.pojo.Node;
 import twitter4j.Status;
+
+import java.util.List;
 
 /**
  * User: mcsere
@@ -18,4 +21,5 @@ public class SlaveNodeController extends AbstractNodeController implements ISlav
         LOGGER.warn(tweet);
         return 0;
     }
+
 }
