@@ -50,8 +50,7 @@ public class NodeManager {
             case SLAVE: {
                 Node masterNode = new Node(RouteConstants.MASTER_QUEUE, masterIP);
                 masterNode.setJMSPort(masterPORT);
-                NodeUtil.addActiveMQComponent(RouteConstants.MASTER_QUEUE, NodeUtil.getJMSPathFromIP(masterNode.getIP(),
-                        masterNode.getJMSPort()), camelContext);
+                NodeUtil.addActiveMQComponent(RouteConstants.MASTER_QUEUE, masterNode, camelContext);
                 try {
                     IMasterNodeController masterProxy = NodeUtil.buildProxyMaster(masterNode, camelContext);
                     IMasterNodeController masterProxy2 = NodeUtil.buildProxyMaster(masterNode, camelContext);

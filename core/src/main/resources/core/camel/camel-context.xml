@@ -9,6 +9,13 @@
 
     <bean id="testTwitterBeanProcessor" class="com.pentalog.twitter.processor.TwitterBeanProcessor"/>
     <bean id="httpProcessor" class="com.pentalog.twitter.processor.HTTPProcessor"/>
+
+    <!--Mongo processors START-->
+    <bean id="wordsProcessor" class="com.pentalog.twitter.processor.mongo.WordsProcessor"/>
+
+    <!--Mongo processors STOP-->
+
+
     <!-- camel activemq http://camel.apache.org/using-camelproxy.html component to connect to the broker   -->
     <bean id="activemq" class="org.apache.activemq.camel.component.ActiveMQComponent">
         <property name="brokerURL" value="tcp://localhost:${cluster.local.jms.port}"/>
@@ -19,7 +26,11 @@
         <endpoint id="twitterStreamEndpoint"
                   uri="twitter://streaming/sample?delay=${twitter.stream.delay}&amp;type=${twitter.stream.type}&amp;consumerKey=${twitter.stream.consumerKey}&amp;consumerSecret=${twitter.stream.consumerSecret}&amp;accessToken=${twitter.stream.accessToken}&amp;accessTokenSecret=${twitter.stream.accessTokenSecret}"/>
 
-        <route id="twitterTOQueueRoute" autoStartup="false">
+        <!--<bean id="stopWordsEndpoint"-->
+                  <!--uri="mongodb:mongoConnectionBean?database=statistics&amp;collection=constants&amp;operation=find"/>-->
+
+
+        <route id="twitterTOQueueRoute" autoStartup="true">
             <from ref="twitterStreamEndpoint"/>
             <process ref="testTwitterBeanProcessor"/>
             <to uri="seda:tweetsQueue"/>
@@ -44,6 +55,26 @@
             <to uri="bean:nodeManager?method=buildNodes"/>
         </route>
 
+
+        <!--Mongo routes START-->
+        <route id="wordsRoute2" autoStartup="true">
+            <from uri="seda:tweetsQueue"/>
+            <to uri="tweetwords:TweetWords"/>
+        </route>
+
+
+
+
+
+        <route id="wordsRoute" autoStartup="false">
+            <from uri="seda:tweetsQueue"/>
+            <process ref="wordsProcessor"/>
+            <to uri="mock:foo"/>
+        </route>
+
+
+
+        <!--Mongo routes STOP-->
 
     </camelContext>
 

@@ -18,6 +18,13 @@
     </properties>
 
     <dependencies>
+
+        <dependency>
+            <groupId>com.pentalog</groupId>
+            <artifactId>twitter.trends.tweetwords</artifactId>
+        </dependency>
+
+
         <dependency>
             <groupId>org.apache.camel</groupId>
             <artifactId>camel-core</artifactId>

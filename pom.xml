@@ -26,6 +26,7 @@
         <log4j.version>1.2.17</log4j.version>
         <twitter4j.version>4.0.2</twitter4j.version>
         <freemarker.version>2.3.20</freemarker.version>
+        <mongo.version>2.12.4</mongo.version>
 
 
         <jetty.port>8080</jetty.port>
@@ -38,7 +39,11 @@
 
     <dependencyManagement>
         <dependencies>
-
+            <dependency>
+                <groupId>com.pentalog</groupId>
+                <artifactId>twitter.trends.tweetwords</artifactId>
+                <version>${project.version}</version>
+            </dependency>
 
             <dependency>
                 <groupId>com.pentalog</groupId>
@@ -139,6 +144,20 @@
                 <artifactId>camel-test</artifactId>
                 <version>${camel.version}</version>
                 <scope>test</scope>
+            </dependency>
+
+
+            <!--MONGODB-->
+            <dependency>
+                <groupId>org.mongodb</groupId>
+                <artifactId>mongo-java-driver</artifactId>
+                <version>${mongo.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.apache.camel</groupId>
+                <artifactId>camel-mongodb</artifactId>
+                <version>${camel.version}</version>
             </dependency>
 
         </dependencies>

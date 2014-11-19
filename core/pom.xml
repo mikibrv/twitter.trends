@@ -9,6 +9,7 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
+
     <artifactId>twitter.trends.core</artifactId>
 
 
@@ -17,6 +18,11 @@
         <dependency>
             <groupId>com.pentalog</groupId>
             <artifactId>twitter.trends.common</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.pentalog</groupId>
+            <artifactId>twitter.trends.tweetwords</artifactId>
         </dependency>
 
 
@@ -82,6 +88,18 @@
             <artifactId>junit</artifactId>
             <scope>test</scope>
         </dependency>
+
+        <!--MONGO-->
+        <dependency>
+            <groupId>org.mongodb</groupId>
+            <artifactId>mongo-java-driver</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.camel</groupId>
+            <artifactId>camel-mongodb</artifactId>
+        </dependency>
+
 
     </dependencies>
 
