@@ -4,6 +4,7 @@ import com.pentalog.twitter.interfaces.IMasterNodeController;
 import com.pentalog.twitter.interfaces.ISlaveNodeController;
 import com.pentalog.twitter.manager.enums.RouteConstants;
 import com.pentalog.twitter.manager.exceptions.BadMessageException;
+import com.pentalog.twitter.manager.exceptions.SlaveCrashedException;
 import com.pentalog.twitter.pojo.Node;
 import com.pentalog.twitter.util.NodeUtil;
 import org.apache.activemq.camel.component.ActiveMQComponent;
@@ -70,7 +71,11 @@ public class NodeProxy implements Processor {
     public void process(Exchange exchange) throws Exception {
         if (!node.isMaster()) {
             if (exchange.getIn().getBody() instanceof Status) {
-                slaveNodeController.handleTweet((twitter4j.Status) exchange.getIn().getBody());
+                try {
+                    slaveNodeController.handleTweet((twitter4j.Status) exchange.getIn().getBody());
+                } catch (Exception e) {
+                    throw new SlaveCrashedException(e);
+                }
             } else {
                 throw new BadMessageException(exchange.getIn().getBody().toString());
             }

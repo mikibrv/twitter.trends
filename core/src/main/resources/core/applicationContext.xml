@@ -26,8 +26,12 @@
         <constructor-arg value="${cluster.master.IP}"/>
     </bean>
 
-    <bean id="masterController" class="com.pentalog.twitter.manager.impl.MasterNodeController"/>
-    <bean id="slaveController" class="com.pentalog.twitter.manager.impl.SlaveNodeController"/>
+    <bean id="masterController" class="com.pentalog.twitter.manager.impl.MasterNodeController">
+        <constructor-arg ref="currentNode"/>
+    </bean>
+    <bean id="slaveController" class="com.pentalog.twitter.manager.impl.SlaveNodeController">
+        <constructor-arg ref="currentNode"/>
+    </bean>
 
 
     <import resource="activemq/activemq-broker.xml"/>

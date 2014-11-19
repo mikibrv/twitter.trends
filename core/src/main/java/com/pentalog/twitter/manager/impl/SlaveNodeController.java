@@ -16,9 +16,14 @@ import java.util.List;
 public class SlaveNodeController extends AbstractNodeController implements ISlaveNodeController {
 
 
+    public SlaveNodeController(Node node) {
+        super(node);
+    }
+
     @Override
     public int handleTweet(Status tweet) {
-        LOGGER.warn(tweet);
+        // LOGGER.warn(tweet);
+        LOGGER.warn(this.node.getUuid());
         return 0;
     }
 

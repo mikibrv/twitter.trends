@@ -3,6 +3,7 @@ package com.pentalog.twitter.manager;
 import com.pentalog.twitter.interfaces.IMasterNodeController;
 import com.pentalog.twitter.interfaces.ISlaveNodeController;
 import com.pentalog.twitter.manager.enums.RouteConstants;
+import com.pentalog.twitter.master.TweetBalancer;
 import com.pentalog.twitter.pojo.Node;
 import com.pentalog.twitter.util.NodeUtil;
 import org.apache.camel.model.ModelCamelContext;
@@ -50,12 +51,9 @@ public class NodeManager {
             case SLAVE: {
                 Node masterNode = new Node(RouteConstants.MASTER_QUEUE, masterIP);
                 masterNode.setJMSPort(masterPORT);
-                NodeUtil.addActiveMQComponent(RouteConstants.MASTER_QUEUE, NodeUtil.getJMSPathFromIP(masterNode.getIP(),
-                        masterNode.getJMSPort()), camelContext);
+                NodeUtil.addActiveMQComponent(RouteConstants.MASTER_QUEUE, node, camelContext);
                 try {
                     IMasterNodeController masterProxy = NodeUtil.buildProxyMaster(masterNode, camelContext);
-                    IMasterNodeController masterProxy2 = NodeUtil.buildProxyMaster(masterNode, camelContext);
-                    IMasterNodeController masterProxy3 = NodeUtil.buildProxyMaster(masterNode, camelContext);
                     masterProxy.addNode(node);
 
                 } catch (Exception e) {

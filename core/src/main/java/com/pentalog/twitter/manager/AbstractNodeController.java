@@ -20,10 +20,16 @@ public abstract class AbstractNodeController {
 
     protected Logger LOGGER = Logger.getLogger(this.getClass());
 
-    protected List<NodeProxy> clusterNodes = new ArrayList<>();
+    protected List<NodeProxy> clusterNodes = new ArrayList<NodeProxy>();
+
+    protected Node node;
 
     @Resource(name = "camelContext")
-    ModelCamelContext camelContext;
+    protected ModelCamelContext camelContext;
+
+    public AbstractNodeController(Node node) {
+        this.node = node;
+    }
 
     public long ping(Long timeStart) {
         LOGGER.warn("PING WAS CALLED");

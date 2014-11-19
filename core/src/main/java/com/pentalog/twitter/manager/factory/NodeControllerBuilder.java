@@ -21,12 +21,12 @@ public class NodeControllerBuilder {
     }
 
     public IMasterNodeController buildMaster() {
-        MasterNodeController masterNode = new MasterNodeController();
+        MasterNodeController masterNode = new MasterNodeController(null);
         return masterNode;
     }
 
     public ISlaveNodeController buildSlave() {
-        SlaveNodeController slaveNode = new SlaveNodeController();
+        SlaveNodeController slaveNode = new SlaveNodeController(null);
         return slaveNode;
     }
 
