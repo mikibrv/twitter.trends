@@ -11,7 +11,7 @@
     <bean id="httpProcessor" class="com.pentalog.twitter.processor.HTTPProcessor"/>
     <!-- camel activemq http://camel.apache.org/using-camelproxy.html component to connect to the broker   -->
     <bean id="activemq" class="org.apache.activemq.camel.component.ActiveMQComponent">
-        <property name="brokerURL" value="tcp://localhost:${cluster.local.jms.port}"/>
+        <property name="brokerURL" value="tcp://${cluster.local.ip}:${cluster.local.jms.port}"/>
     </bean>
 
     <camelContext id="camelContext" xmlns="http://camel.apache.org/schema/spring">
@@ -30,7 +30,7 @@
         <route id="masterTwitterStream" autoStartup="false">
             <from ref="twitterStreamEndpoint"/>
             <process ref="testTwitterBeanProcessor"/>
-            <to uri="seda:tweetsQuelue"/>
+            <to uri="seda:tweetsQueue"/>
         </route>
         <!-- End Of Master -->
 
@@ -50,7 +50,6 @@
         </route>
 
         <!-- END OF SLAVE DECLARATIONS -->
-
 
 
     </camelContext>

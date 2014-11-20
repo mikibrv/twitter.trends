@@ -10,7 +10,7 @@
     <!-- setup a real ActiveMQ broker -->
     <broker:broker useJmx="false" persistent="false" brokerName="${cluster.local.jms.brokername}">
         <broker:transportConnectors>
-            <broker:transportConnector name="tcp" uri="tcp://localhost:${cluster.local.jms.port}"/>
+            <broker:transportConnector name="tcp" uri="tcp://${cluster.local.ip}:${cluster.local.jms.port}"/>
         </broker:transportConnectors>
     </broker:broker>
 

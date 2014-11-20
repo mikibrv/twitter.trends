@@ -3,9 +3,9 @@ package com.pentalog.twitter.master;
 import com.pentalog.twitter.manager.enums.RouteConstants;
 import com.pentalog.twitter.manager.exceptions.SlaveCrashedException;
 import com.pentalog.twitter.manager.wrapper.NodeProxy;
+import com.pentalog.twitter.processor.TwitterBeanProcessor;
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.processor.loadbalancer.FailOverLoadBalancer;
-import org.apache.camel.processor.loadbalancer.RoundRobinLoadBalancer;
 import org.apache.log4j.Logger;
 
 import java.util.ArrayList;
