@@ -52,6 +52,7 @@ public class NodeProxy implements Processor {
     public void buildProxyOverNode() throws Exception {
         ActiveMQConfiguration activeMQConfiguration = new ActiveMQConfiguration();
         activeMQConfiguration.setBrokerURL(getPathTOProxyJMS(node.getIP(), node.getJMSPort()));
+        activeMQConfiguration.setAutoStartup(true);
         camelContext.addComponent(node.getUuid(), new ActiveMQComponent(activeMQConfiguration));
         LOGGER.warn("Added ActiveMQComponent to: " + getPathTOProxyJMS(node.getIP(), node.getJMSPort()));
         //build the proxies depending on nodeType;

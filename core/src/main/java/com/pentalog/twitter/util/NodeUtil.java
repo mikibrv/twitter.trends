@@ -35,14 +35,14 @@ public class NodeUtil {
     }
 
     /**
-     * @param name
      * @param node    tcp://localhost:61616
      * @param context
      */
-    public static void addActiveMQComponent(String name, Node node, ModelCamelContext context) {
+    public static void addActiveMQComponent(Node node, ModelCamelContext context) {
         ActiveMQConfiguration activeMQConfiguration = new ActiveMQConfiguration();
         activeMQConfiguration.setBrokerURL(getJMSPathFromIP(node.getIP(), node.getJMSPort()));
-        context.addComponent(name, new ActiveMQComponent());
+        activeMQConfiguration.setAutoStartup(true);
+        context.addComponent(node.getUuid(), new ActiveMQComponent(activeMQConfiguration));
     }
 
     public static String getJMSPathFromIP(String ip, Integer port) {

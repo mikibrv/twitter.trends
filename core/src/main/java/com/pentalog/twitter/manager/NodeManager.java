@@ -71,7 +71,7 @@ public class NodeManager {
          */
         Node masterNode = new Node(RouteConstants.MASTER_QUEUE, masterIP);
         masterNode.setJMSPort(masterPORT);
-        NodeUtil.addActiveMQComponent(RouteConstants.MASTER_QUEUE, node, camelContext);
+        NodeUtil.addActiveMQComponent(masterNode, camelContext);
         IMasterNodeController masterProxy = NodeUtil.buildProxyMaster(masterNode, camelContext);
         LOGGER.warn("PING REPLY: " + masterProxy.ping(10L));
         masterProxy.addNode(node);
