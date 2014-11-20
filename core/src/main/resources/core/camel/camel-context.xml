@@ -15,34 +15,41 @@
     </bean>
 
     <camelContext id="camelContext" xmlns="http://camel.apache.org/schema/spring">
-        <!-- Master Routes -->
         <endpoint id="twitterStreamEndpoint"
                   uri="twitter://streaming/sample?delay=${twitter.stream.delay}&amp;type=${twitter.stream.type}&amp;consumerKey=${twitter.stream.consumerKey}&amp;consumerSecret=${twitter.stream.consumerSecret}&amp;accessToken=${twitter.stream.accessToken}&amp;accessTokenSecret=${twitter.stream.accessTokenSecret}"/>
 
-        <route id="twitterTOQueueRoute" autoStartup="false">
+
+        <route>
+            <from uri="timer://runOnce?repeatCount=1&amp;delay=3000"/>
+            <to uri="bean:nodeManager?method=buildNodes"/>
+        </route>
+
+
+        <!-- Master Routes -->
+
+        <route id="masterTwitterStream" autoStartup="false">
             <from ref="twitterStreamEndpoint"/>
             <process ref="testTwitterBeanProcessor"/>
-            <to uri="seda:tweetsQueue"/>
+            <to uri="seda:tweetsQuelue"/>
         </route>
         <!-- End Of Master -->
 
 
-        <route>
+        <route id="masterIncoming" autoStartup="true">
             <from uri="activemq:queue:MASTER"/>
             <to uri="bean:masterController"/>
         </route>
 
 
-        <route>
+        <!--SLAVE -->
+
+
+        <route id="slaveIncoming" autoStartup="true">
             <from uri="activemq:queue:SLAVE"/>
             <to uri="bean:slaveController"/>
         </route>
 
-
-        <route>
-            <from uri="timer://runOnce?repeatCount=1&amp;delay=500"/>
-            <to uri="bean:nodeManager?method=buildNodes"/>
-        </route>
+        <!-- END OF SLAVE DECLARATIONS -->
 
 
 

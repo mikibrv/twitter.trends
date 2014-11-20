@@ -19,7 +19,7 @@ public interface INodeController {
      */
     public long ping(Long pingStart);
 
-    public void addNode(Node node);
+    public boolean addNode(Node node);
 
     public Node getMaster();
 

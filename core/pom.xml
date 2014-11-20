@@ -81,7 +81,6 @@
         </dependency>
 
 
-
         <!--- TEST DEPENDENCIES -->
         <dependency>
             <groupId>junit</groupId>
@@ -105,6 +104,12 @@
 
 
     <build>
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+                <filtering>true</filtering>
+            </resource>
+        </resources>
         <plugins>
 
             <plugin>
@@ -120,6 +125,14 @@
             <activation>
                 <activeByDefault>true</activeByDefault>
             </activation>
+            <properties>
+                <master.jms.port>61616</master.jms.port>
+                <master.ip>localhost</master.ip>
+
+                <local.jms.port>61617</local.jms.port>
+                <local.is.master>false</local.is.master>
+                <local.jms.brokername>slavebroker</local.jms.brokername>
+            </properties>
             <build>
                 <plugins>
                     <plugin>
@@ -128,9 +141,6 @@
                         <version>1.3.2</version>
                         <configuration>
                             <mainClass>com.pentalog.twitter.NodeLauncher</mainClass>
-                            <arguments>
-                                <argument>SLAVE</argument>
-                            </arguments>
                         </configuration>
                     </plugin>
                 </plugins>
@@ -142,6 +152,14 @@
             <activation>
                 <activeByDefault>false</activeByDefault>
             </activation>
+            <properties>
+                <master.jms.port>61616</master.jms.port>
+                <master.ip>localhost</master.ip>
+
+                <local.jms.port>61616</local.jms.port>
+                <local.jms.brokername>mastebroker</local.jms.brokername>
+                <local.is.master>true</local.is.master>
+            </properties>
             <build>
                 <plugins>
                     <plugin>
@@ -150,10 +168,8 @@
                         <version>1.3.2</version>
                         <configuration>
                             <mainClass>com.pentalog.twitter.NodeLauncher</mainClass>
-                            <arguments>
-                                <argument>MASTER</argument>
-                            </arguments>
                         </configuration>
+
                     </plugin>
                 </plugins>
             </build>

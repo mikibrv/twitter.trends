@@ -22,51 +22,46 @@ public abstract class AbstractNodeController {
 
     protected List<NodeProxy> clusterNodes = new ArrayList<NodeProxy>();
 
-    protected Node node;
+    protected Node currentNode;
 
     @Resource(name = "camelContext")
     protected ModelCamelContext camelContext;
 
     public AbstractNodeController(Node node) {
-        this.node = node;
+        this.currentNode = node;
     }
 
-    public long ping(Long timeStart) {
-        LOGGER.warn("PING WAS CALLED");
-        return System.currentTimeMillis() - timeStart;
-    }
+    public boolean addNode(Node node) {
 
-    public void addNode(Node node) {
-        NodeProxy nodeProxy = new NodeProxy(node);
         try {
-            nodeProxy.buildProxy(camelContext);
+            NodeProxy nodeProxy = new NodeProxy(node, camelContext);
             this.clusterNodes.add(nodeProxy);
         } catch (Exception e) {
-            LOGGER.error(e);
+            LOGGER.error("Unable to add node", e);
+            return false;
         }
+        return true;
 
-    }
-
-    protected NodeProxy getMasterNode() {
-        for (NodeProxy nodeProxy : clusterNodes) {
-            if (nodeProxy.getNode().isMaster()) {
-                return nodeProxy;
-            }
-        }
-        return null;
     }
 
     public Node getMaster() {
         for (NodeProxy nodeProxy : clusterNodes) {
-            if (nodeProxy.getNode().isMaster()) {
+            if (nodeProxy.isMaster()) {
                 return nodeProxy.getNode();
             }
         }
         return null;
     }
 
-
     public void updateClusterNodes(List<Node> clusterNodes) {
+        this.clusterNodes.clear();
+        for (Node node : clusterNodes) {
+            this.addNode(node);
+        }
+    }
 
+    public long ping(Long timeStart) {
+        LOGGER.warn("PING WAS CALLED");
+        return System.currentTimeMillis() - timeStart;
     }
 }

@@ -19,15 +19,17 @@ public class MasterNodeController extends AbstractNodeController implements IMas
     }
 
     @Override
-    public void addNode(Node node) {
+    public boolean addNode(Node node) {
         super.addNode(node);
         LOGGER.warn("NODE ADDED:" + node);
-        this.clusterNodes.get(0).getSlaveNodeController().ping(System.currentTimeMillis());
+        this.clusterNodes.get(0).getSlaveController().ping(System.currentTimeMillis());
         try {
             camelContext.removeRoute(RouteConstants.MASTER_LB_TO_SLAVES);
             camelContext.addRoutes(new TweetBalancer(this.clusterNodes));
         } catch (Exception e) {
             e.printStackTrace();
+            return false;
         }
+        return true;
     }
 }

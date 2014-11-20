@@ -7,7 +7,7 @@ package com.pentalog.twitter.manager.enums;
  */
 public abstract class RouteConstants {
 
-    public static String ROUTE_MASTER_STREAM = "twitterTOQueueRoute";
+    public static String ROUTE_MASTER_STREAM = "masterTwitterStream";
 
     public static String SLAVE_QUEUE = "SLAVE";
 

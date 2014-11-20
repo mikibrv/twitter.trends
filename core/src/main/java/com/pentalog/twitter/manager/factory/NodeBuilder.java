@@ -4,6 +4,7 @@ import com.pentalog.twitter.manager.enums.RouteConstants;
 import com.pentalog.twitter.manager.exceptions.NOInternetException;
 import com.pentalog.twitter.pojo.Node;
 import com.pentalog.twitter.pojo.NodeType;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -21,19 +22,27 @@ import java.util.UUID;
 @Configuration
 public class NodeBuilder {
 
-    @Resource(name = "currentNodeType")
-    NodeType nodeType;
+    Logger LOGGER = Logger.getLogger(this.getClass());
+
+    @Value("${cluster.local.is.master}")
+    private Boolean isMaster;
     @Value("${cluster.local.jms.port}")
     private Integer jmsPort;
 
+
+    private static final String NODE_PREFIX = "Node";
 
     @Bean(name = "currentNode")
     public Node buildNode() throws NOInternetException {
         Node node = null;
 
+        NodeType nodeType = isMaster ? NodeType.MASTER : NodeType.SLAVE;
+
+        LOGGER.warn("Creating node as " + nodeType + " with port : " + jmsPort);
+
         try {
-            node = new Node(RouteConstants.SLAVE_QUEUE + UUID.randomUUID().toString().replaceAll("-", ""), InetAddress.getLocalHost().getCanonicalHostName());
-            node.setType(this.nodeType);
+            node = new Node(NODE_PREFIX + UUID.randomUUID().toString().replaceAll("-", ""), InetAddress.getLocalHost().getCanonicalHostName());
+            node.setType(nodeType);
             node.setJMSPort(jmsPort);
         } catch (UnknownHostException e) {
             throw new NOInternetException(e);

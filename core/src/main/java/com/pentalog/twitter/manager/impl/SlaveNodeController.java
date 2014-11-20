@@ -23,7 +23,7 @@ public class SlaveNodeController extends AbstractNodeController implements ISlav
     @Override
     public int handleTweet(Status tweet) {
         // LOGGER.warn(tweet);
-        LOGGER.warn(this.node.getUuid());
+        LOGGER.warn(this.currentNode.getUuid());
         return 0;
     }
 
