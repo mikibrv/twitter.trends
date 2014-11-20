@@ -43,6 +43,9 @@ public class MongoQueries {
 
 	public static List<String> getStopWords() throws MongoException {
 
+		if (!isInit()) {
+			throw new MongoException("Need to run init() into MongoQueries first!!!");
+		}
 		List<String> results = new ArrayList<>();
 		DBCollection constantsColl = getCollectionStatisticsConstants();
 		DBObject query = new BasicDBObject("stopwords", new BasicDBObject("$exists", 1));
@@ -57,6 +60,9 @@ public class MongoQueries {
 
 	public static void saveWordsIntoDB(List<Word> words) {
 
+		if (!isInit()) {
+			throw new MongoException("Need to run init() into MongoQueries first!!!");
+		}
 		DBCollection wordsColl = getCollectionStatisticsWords();
 		for (Word wordObject : words) {
 			DBObject dbObject = getSpecificWord(wordObject.getWordValue(), wordObject.getBeginDateValue());
@@ -78,6 +84,9 @@ public class MongoQueries {
 
 	public static Word getSpecificWord(String word, long interval) throws MongoException {
 
+		if (!isInit()) {
+			throw new MongoException("Need to run init() into MongoQueries first!!!");
+		}
 		interval = MongoUtils.trimDateToHours(interval);
 		DBCollection wordsColl = getCollectionStatisticsWords();
 		DBObject query = new BasicDBObject();
@@ -94,6 +103,9 @@ public class MongoQueries {
 
 	public static List<Word> getWords(long interval) throws MongoException {
 
+		if (!isInit()) {
+			throw new MongoException("Need to run init() into MongoQueries first!!!");
+		}
 		interval = MongoUtils.trimDateToHours(interval);
 		DBCollection wordsColl = getCollectionStatisticsWords();
 		DBObject query = new BasicDBObject();

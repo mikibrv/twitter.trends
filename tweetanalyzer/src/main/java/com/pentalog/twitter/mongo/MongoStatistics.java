@@ -32,7 +32,7 @@ public class MongoStatistics {
 		return true;
 	}
 
-	public static void init() {
+	private static void init() {
 
 		MongoStatistics.mongoQueries.init(MongoStatistics.mongoConnection.getMongoClient());
 	}
@@ -40,7 +40,7 @@ public class MongoStatistics {
 	public static void processWords(Status tweet) {
 
 		if (!isInit()) {
-			throw new MongoException("Need to run init() into MongoStatistics first!!!");
+			init();
 		}
 		Message message = new DefaultMessage();
 		String tweetLang = tweet.getLang();
@@ -58,7 +58,6 @@ public class MongoStatistics {
 		}
 		List<Word> wordObjects = new ArrayList<>();
 		if (tweetLang.equals("en")) {
-			//			System.out.println("***"+tweetLang + " " + tweetID + " " + tweetDate + " " + country + " " + tweetText+" "+hashTags);
 			List<String> words = splitTweetWords(tweetText);
 			words.addAll(hashTags);
 			TweetInfoLight tweetInfo = new TweetInfoLight();
