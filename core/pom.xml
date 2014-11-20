@@ -131,6 +131,7 @@
 
                 <local.jms.port>8089</local.jms.port>
                 <local.is.master>false</local.is.master>
+                <local.ip>10.185.40.90</local.ip>
                 <local.jms.brokername>slavebroker</local.jms.brokername>
             </properties>
             <build>
@@ -154,10 +155,11 @@
             </activation>
             <properties>
                 <master.jms.port>61616</master.jms.port>
-                <master.ip>localhost</master.ip>
+                <master.ip>10.185.40.90</master.ip>
 
                 <local.jms.port>61616</local.jms.port>
-                <local.jms.brokername>mastebroker</local.jms.brokername>
+                <local.jms.brokername>masterbroker</local.jms.brokername>
+                <local.ip>10.185.40.90</local.ip>
                 <local.is.master>true</local.is.master>
             </properties>
             <build>

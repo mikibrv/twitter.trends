@@ -15,6 +15,7 @@ import java.util.List;
  */
 public class SlaveNodeController extends AbstractNodeController implements ISlaveNodeController {
 
+    int count = 0;
 
     public SlaveNodeController(Node node) {
         super(node);
@@ -23,7 +24,7 @@ public class SlaveNodeController extends AbstractNodeController implements ISlav
     @Override
     public int handleTweet(Status tweet) {
         // LOGGER.warn(tweet);
-        LOGGER.warn(this.currentNode.getUuid());
+        LOGGER.warn(count++);
         return 0;
     }
 
