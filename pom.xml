@@ -11,7 +11,7 @@
         <module>common</module>
         <module>core</module>
         <module>webapp</module>
-        <module>tweetwords</module>
+        <module>tweetanalyzer</module>
     </modules>
 
 
@@ -41,8 +41,23 @@
         <dependencies>
             <dependency>
                 <groupId>com.pentalog</groupId>
-                <artifactId>twitter.trends.tweetwords</artifactId>
+                <artifactId>twitter.trends.tweetanalyzer</artifactId>
                 <version>${project.version}</version>
+            </dependency>
+
+
+            <dependency>
+                <groupId>com.pentalog</groupId>
+                <artifactId>twitter.trends.tweetanalyzer</artifactId>
+                <version>${project.version}</version>
+                <scope>compile</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>com.pentalog</groupId>
+                <artifactId>twitter.trends.core</artifactId>
+                <version>${project.version}</version>
+                <scope>compile</scope>
             </dependency>
 
             <dependency>
