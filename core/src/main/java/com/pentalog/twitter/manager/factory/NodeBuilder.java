@@ -41,7 +41,7 @@ public class NodeBuilder {
         LOGGER.warn("Creating node as " + nodeType + " with port : " + jmsPort);
 
         try {
-            node = new Node(NODE_PREFIX + UUID.randomUUID().toString().replaceAll("-", ""), InetAddress.getLocalHost().getCanonicalHostName());
+            node = new Node(NODE_PREFIX + UUID.randomUUID().toString().replaceAll("-", ""), InetAddress.getLocalHost().getHostAddress());
             node.setType(nodeType);
             node.setJMSPort(jmsPort);
         } catch (UnknownHostException e) {
