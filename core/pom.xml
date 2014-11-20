@@ -22,7 +22,7 @@
 
         <dependency>
             <groupId>com.pentalog</groupId>
-            <artifactId>twitter.trends.tweetwords</artifactId>
+            <artifactId>twitter.trends.tweetanalyzer</artifactId>
         </dependency>
 
 
@@ -127,9 +127,9 @@
             </activation>
             <properties>
                 <master.jms.port>61616</master.jms.port>
-                <master.ip>localhost</master.ip>
+                <master.ip>10.185.40.90</master.ip>
 
-                <local.jms.port>61617</local.jms.port>
+                <local.jms.port>8089</local.jms.port>
                 <local.is.master>false</local.is.master>
                 <local.jms.brokername>slavebroker</local.jms.brokername>
             </properties>
