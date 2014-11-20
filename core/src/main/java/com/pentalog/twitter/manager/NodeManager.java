@@ -73,7 +73,7 @@ public class NodeManager {
         masterNode.setJMSPort(masterPORT);
         NodeUtil.addActiveMQComponent(masterNode, camelContext);
         IMasterNodeController masterProxy = NodeUtil.buildProxyMaster(masterNode, camelContext);
-        LOGGER.warn("PING REPLY: " + masterProxy.ping(10L));
+        LOGGER.warn("PING REPLY: " + masterProxy.ping(System.currentTimeMillis()));
         masterProxy.addNode(node);
     }
 

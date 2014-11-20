@@ -30,16 +30,16 @@
         <route id="masterTwitterStream" autoStartup="false">
             <from ref="twitterStreamEndpoint"/>
             <process ref="testTwitterBeanProcessor"/>
-            <to uri="seda:tweetsQueue"/>
+            <to uri="seda:tweetsQueue?size=1000"/>
         </route>
-        <!-- End Of Master -->
+
 
 
         <route id="masterIncoming" autoStartup="true">
             <from uri="activemq:queue:MASTER"/>
             <to uri="bean:masterController"/>
         </route>
-
+        <!-- End Of Master -->
 
         <!--SLAVE -->
 

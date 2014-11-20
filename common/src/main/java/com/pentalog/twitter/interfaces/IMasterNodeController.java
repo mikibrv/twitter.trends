@@ -8,5 +8,6 @@ package com.pentalog.twitter.interfaces;
 public interface IMasterNodeController extends INodeController {
 
 
+    public void removeNode(String nodeID);
 
 }

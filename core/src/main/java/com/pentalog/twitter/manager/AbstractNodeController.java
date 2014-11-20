@@ -64,4 +64,13 @@ public abstract class AbstractNodeController {
         LOGGER.warn("PING WAS CALLED");
         return System.currentTimeMillis() - timeStart;
     }
+
+    protected NodeProxy getNodeByUUID(String UUID) {
+        for (NodeProxy nodeProxy : clusterNodes) {
+            if (nodeProxy.getNode().getUuid().equalsIgnoreCase(UUID)) {
+                return nodeProxy;
+            }
+        }
+        return null;
+    }
 }

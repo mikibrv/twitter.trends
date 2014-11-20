@@ -25,8 +25,9 @@ public class NodeProxy implements Processor {
 
     Logger LOGGER = Logger.getLogger(this.getClass());
     private Node node;
-    private INodeController nodeController = null;
+    private INodeController remoteNodeController = null;
     private ModelCamelContext camelContext;
+    private IMasterNodeController currentNodeMasterController = null;
 
 
     public NodeProxy(Node node, ModelCamelContext camelContext) throws Exception {
@@ -37,14 +38,14 @@ public class NodeProxy implements Processor {
 
     public IMasterNodeController getMasterController() {
         if (this.isMaster()) {
-            return (IMasterNodeController) this.nodeController;
+            return (IMasterNodeController) this.remoteNodeController;
         }
         return null;
     }
 
     public ISlaveNodeController getSlaveController() {
         if (this.isSlave()) {
-            return (ISlaveNodeController) this.nodeController;
+            return (ISlaveNodeController) this.remoteNodeController;
         }
         return null;
     }
@@ -57,12 +58,12 @@ public class NodeProxy implements Processor {
         LOGGER.warn("Added ActiveMQComponent to: " + getPathTOProxyJMS(node.getIP(), node.getJMSPort()));
         //build the proxies depending on nodeType;
         if (this.node.isMaster()) {
-            this.nodeController = new ProxyBuilder(camelContext).
+            this.remoteNodeController = new ProxyBuilder(camelContext).
                     endpoint(node.getUuid() + ":queue:" + RouteConstants.MASTER_QUEUE).
                     build(IMasterNodeController.class);
             LOGGER.warn("Created MasterProxy: " + node.getUuid());
         } else {
-            this.nodeController = new ProxyBuilder(camelContext).
+            this.remoteNodeController = new ProxyBuilder(camelContext).
                     endpoint(node.getUuid() + ":queue:" + RouteConstants.SLAVE_QUEUE).
                     build(ISlaveNodeController.class);
             LOGGER.warn("Created SlaveProxy" + node.getUuid());
@@ -70,8 +71,14 @@ public class NodeProxy implements Processor {
     }
 
     public void clearProxy() {
+        try {
+            ActiveMQComponent component = (ActiveMQComponent) camelContext.getComponent(node.getUuid());
+            component.stop();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         camelContext.removeComponent(node.getUuid());
-        this.nodeController = null;
+        this.remoteNodeController = null;
     }
 
     /**
@@ -101,6 +108,8 @@ public class NodeProxy implements Processor {
                 try {
                     getSlaveController().handleTweet((twitter4j.Status) exchange.getIn().getBody());
                 } catch (Exception e) {
+                    LOGGER.warn("Node crashed: " + node.getUuid());
+                    currentNodeMasterController.removeNode(node.getUuid());
                     throw new SlaveCrashedException(e);
                 }
             } else {
@@ -111,6 +120,27 @@ public class NodeProxy implements Processor {
 
     public Node getNode() {
         return node;
+    }
+
+    public void setCurrentNodeMasterController(IMasterNodeController currentNodeMasterController) {
+        this.currentNodeMasterController = currentNodeMasterController;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        NodeProxy nodeProxy = (NodeProxy) o;
+
+        if (node != null ? !node.equals(nodeProxy.node) : nodeProxy.node != null) return false;
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        return node != null ? node.hashCode() : 0;
     }
 }
 
