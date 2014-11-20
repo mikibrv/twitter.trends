@@ -13,7 +13,11 @@ import com.pentalog.twitter.model.mongoObjects.Country;
 import com.pentalog.twitter.model.mongoObjects.TweetInfoLight;
 import com.pentalog.twitter.model.mongoObjects.Word;
 import org.apache.camel.Endpoint;
+import org.apache.camel.Message;
 import org.apache.camel.ProducerTemplate;
+import org.apache.camel.impl.DefaultMessage;
+import twitter4j.HashtagEntity;
+import twitter4j.Status;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -139,5 +143,44 @@ public class MongoQueries {
 		DB statisticsDB = mongoClient.getDB(dbName);
 		String collectionName = "words";
 		return statisticsDB.getCollection(collectionName);
+	}
+
+	public static void processWords(Status tweet){
+		Message message = new DefaultMessage();
+		String tweetLang = tweet.getLang();
+		long tweetID = tweet.getId();
+		long tweetDate = tweet.getCreatedAt().getTime();
+		String tweetText = tweet.getText();
+		String country = "Not mentioned!";
+		if (tweet.getPlace() != null && tweet.getPlace().getCountry() != null) {
+			country = tweet.getPlace().getCountry();
+		}
+		HashtagEntity[] hashtagEntities = tweet.getHashtagEntities();
+		List<String> hashTags = new ArrayList<>();
+		for (HashtagEntity hashtagEntity : hashtagEntities) {
+			hashTags.add(hashtagEntity.getText());
+		}
+		List<Word> wordObjects = new ArrayList<>();
+		if (tweetLang.equals("en")) {
+			List<String> words = MongoUtils.splitTweetWords(tweetText);
+			words.addAll(hashTags);
+			TweetInfoLight tweetInfo = new TweetInfoLight();
+			tweetInfo.setTweetIdValue(tweetID);
+			tweetInfo.setTweetDateValue(tweetDate);
+			List<String> stopWords = MongoQueries.getStopWords();
+			for (String word : words) {
+				if (word.length() < 2) {
+					continue;
+				}
+				if (!stopWords.contains(word)) {
+					Word wordObject = new Word();
+					wordObject.setWordValue(word);
+					wordObject.setBeginDateValue(MongoUtils.trimDateToHours(tweetDate));
+					wordObject.addTweetInfoToCountry(country, tweetInfo);
+					wordObjects.add(wordObject);
+				}
+			}
+		}
+		MongoQueries.saveWordsIntoDB(wordObjects);
 	}
 }

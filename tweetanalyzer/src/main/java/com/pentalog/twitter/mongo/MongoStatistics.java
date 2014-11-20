@@ -37,56 +37,22 @@ public class MongoStatistics {
 		MongoStatistics.mongoQueries.init(MongoStatistics.mongoConnection.getMongoClient());
 	}
 
+
 	public static void processWords(Status tweet) {
 
 		if (!isInit()) {
 			init();
 		}
-		Message message = new DefaultMessage();
-		String tweetLang = tweet.getLang();
-		long tweetID = tweet.getId();
-		long tweetDate = tweet.getCreatedAt().getTime();
-		String tweetText = tweet.getText();
-		String country = "Not mentioned!";
-		if (tweet.getPlace() != null && tweet.getPlace().getCountry() != null) {
-			country = tweet.getPlace().getCountry();
-		}
-		HashtagEntity[] hashtagEntities = tweet.getHashtagEntities();
-		List<String> hashTags = new ArrayList<>();
-		for (HashtagEntity hashtagEntity : hashtagEntities) {
-			hashTags.add(hashtagEntity.getText());
-		}
-		List<Word> wordObjects = new ArrayList<>();
-		if (tweetLang.equals("en")) {
-			List<String> words = splitTweetWords(tweetText);
-			words.addAll(hashTags);
-			TweetInfoLight tweetInfo = new TweetInfoLight();
-			tweetInfo.setTweetIdValue(tweetID);
-			tweetInfo.setTweetDateValue(tweetDate);
-			List<String> stopWords = MongoQueries.getStopWords();
-			for (String word : words) {
-				if (word.length() < 2) {
-					continue;
-				}
-				if (!stopWords.contains(word)) {
-					Word wordObject = new Word();
-					wordObject.setWordValue(word);
-					wordObject.setBeginDateValue(MongoUtils.trimDateToHours(tweetDate));
-					wordObject.addTweetInfoToCountry(country, tweetInfo);
-					wordObjects.add(wordObject);
-				}
-			}
-		}
-		MongoQueries.saveWordsIntoDB(wordObjects);
+		MongoQueries.processWords(tweet);
+
 	}
 
-	private static List<String> splitTweetWords(String tweetText) {
-
-		List<String> words = new ArrayList<String>();
-		String[] split = tweetText.split("\\P{L}+");
-		Collections.addAll(words, split);
-		return words;
+	public static List<Word> getWordsStatisticsByIntervals(long interval){
+		return MongoQueries.getWords(interval);
 	}
+
+
+
 
 
 }
