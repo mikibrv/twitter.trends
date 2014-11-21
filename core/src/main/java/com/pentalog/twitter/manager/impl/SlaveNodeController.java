@@ -4,10 +4,13 @@ package com.pentalog.twitter.manager.impl;
 import com.pentalog.twitter.interfaces.ISlaveNodeController;
 import com.pentalog.twitter.manager.AbstractNodeController;
 import com.pentalog.twitter.pojo.Node;
+import com.pentalog.twitter.pojo.TweetFilter;
+import com.pentalog.twitter.processor.TweetFilterProcessor;
 import org.apache.camel.EndpointInject;
 import org.apache.camel.ProducerTemplate;
 import twitter4j.Status;
 
+import javax.annotation.Resource;
 
 
 /**
@@ -19,6 +22,9 @@ public class SlaveNodeController extends AbstractNodeController implements ISlav
     @EndpointInject(uri = "seda:slaveTweetHandler")
     ProducerTemplate producer;
 
+    @Resource(name = "tweetFilterPR")
+    TweetFilterProcessor tweetFilterProcessor;
+
     public SlaveNodeController(Node node) {
         super(node);
     }
@@ -27,6 +33,14 @@ public class SlaveNodeController extends AbstractNodeController implements ISlav
     public int handleTweet(Status tweet) {
         producer.sendBody(tweet);
         return 0;
+    }
+
+    @Override
+    public void filterSomeTweets(TweetFilter tweetFilter) {
+        if (tweetFilter.getToFilter() != null && tweetFilter.getToFilter().length() > 1) {
+            tweetFilterProcessor.setTweetFilter(tweetFilter);
+            this.tweetFilter = tweetFilter;
+        }
     }
 
 }

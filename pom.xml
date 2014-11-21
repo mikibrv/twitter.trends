@@ -12,7 +12,6 @@
         <module>core</module>
         <module>webapp</module>
         <module>tweetanalyzer</module>
-        <module>livetrends</module>
     </modules>
 
 
@@ -81,6 +80,13 @@
                 <artifactId>camel-jetty</artifactId>
                 <version>${camel.version}</version>
             </dependency>
+
+            <dependency>
+                <groupId>org.apache.camel</groupId>
+                <artifactId>camel-websocket</artifactId>
+                <version>${camel.version}</version>
+            </dependency>
+
 
             <dependency>
                 <groupId>org.apache.camel</groupId>

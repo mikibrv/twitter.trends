@@ -50,6 +50,11 @@
 
         <dependency>
             <groupId>org.apache.camel</groupId>
+            <artifactId>camel-websocket</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.camel</groupId>
             <artifactId>camel-twitter</artifactId>
         </dependency>
 
@@ -145,6 +150,8 @@
                 <local.ip>10.185.40.90</local.ip>
                 <local.jms.brokername>slavebroker</local.jms.brokername>
                 <local.jetty.port>8021</local.jetty.port>
+                <local.websocket.port>8031</local.websocket.port>
+
             </properties>
 
             <build>
@@ -181,6 +188,8 @@
                 <local.ip>10.185.40.90</local.ip>
                 <local.jms.brokername>slavebrokersecond</local.jms.brokername>
                 <local.jetty.port>8022</local.jetty.port>
+                <local.websocket.port>8032</local.websocket.port>
+
             </properties>
             <build>
                 <plugins>
@@ -213,6 +222,7 @@
                 <local.ip>10.185.40.90</local.ip>
                 <local.is.master>true</local.is.master>
                 <local.jetty.port>8020</local.jetty.port>
+                <local.websocket.port>8030</local.websocket.port>
             </properties>
             <build>
                 <plugins>

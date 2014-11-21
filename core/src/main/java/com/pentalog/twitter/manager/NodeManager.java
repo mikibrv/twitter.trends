@@ -5,6 +5,7 @@ import com.pentalog.twitter.interfaces.ISlaveNodeController;
 import com.pentalog.twitter.manager.enums.RouteConstants;
 import com.pentalog.twitter.master.TweetBalancer;
 import com.pentalog.twitter.pojo.Node;
+import com.pentalog.twitter.processor.TweetFilterProcessor;
 import com.pentalog.twitter.util.NodeUtil;
 import org.apache.camel.Route;
 import org.apache.camel.model.ModelCamelContext;
@@ -33,6 +34,9 @@ public class NodeManager {
     private Integer masterPORT;
     @Value("${cluster.master.IP}")
     private String masterIP;
+
+    @Resource
+    private TweetFilterProcessor tweetFilterProcessor;
 
 
     @Resource(name = "masterController")
@@ -73,6 +77,7 @@ public class NodeManager {
         masterNode.setJMSPort(masterPORT);
         NodeUtil.addActiveMQComponent(masterNode, camelContext);
         IMasterNodeController masterProxy = NodeUtil.buildProxyMaster(masterNode, camelContext);
+        tweetFilterProcessor.setMasterNodeController(masterProxy);
         LOGGER.warn("PING REPLY: " + masterProxy.ping(System.currentTimeMillis()));
         masterProxy.addNode(node);
     }

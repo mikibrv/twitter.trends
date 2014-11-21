@@ -17,8 +17,6 @@
     <camelContext id="camelContext" xmlns="http://camel.apache.org/schema/spring">
         <endpoint id="twitterStreamEndpoint"
                   uri="twitter://streaming/sample?delay=${twitter.stream.delay}&amp;type=${twitter.stream.type}&amp;consumerKey=${twitter.stream.consumerKey}&amp;consumerSecret=${twitter.stream.consumerSecret}&amp;accessToken=${twitter.stream.accessToken}&amp;accessTokenSecret=${twitter.stream.accessTokenSecret}"/>
-
-
         <route>
             <from uri="timer://runOnce?repeatCount=1&amp;delay=3000"/>
             <to uri="bean:nodeManager?method=buildNodes"/>
@@ -38,8 +36,23 @@
 
         <route id="masterIncoming" autoStartup="true">
             <from uri="activemq:queue:MASTER"/>
-            <to uri="bean:masterController"/>
+            <multicast>
+                <to uri="bean:masterController"/>
+            </multicast>
         </route>
+
+
+        <route id="masterWEBSocket">
+            <from uri="seda:masterDisplayFilteredTweets"/>
+            <to uri="websocket:camel-tweet?sendToAll=true&amp;host=${local.ip}&amp;port=${local.websocket.port}"/>
+        </route>
+
+        <route>
+            <from uri="jetty:http://${local.ip}:${local.jetty.port}/startFiltering/"/>
+            <process ref="filterTweetsLauncher"/>
+        </route>
+
+
         <!-- End Of Master -->
 
         <!--SLAVE -->
@@ -57,12 +70,15 @@
                 <process ref="testTwitterBeanProcessor"/>
                 <process ref="roTweetProcessor"/>
                 <process ref="saveTweets"/>
+                <process ref="tweetFilterPR"/>
                 <to uri="bean:nodeStats?method=incrementCount"/>
                 <loadBalance>
                     <roundRobin/>
-                    <to uri="tweetanalyzer:tweetanalyzer"/>
-                    <to uri="tweetanalyzer:tweetanalyzer"/>
-                    <to uri="tweetanalyzer:tweetanalyzer"/>
+                    <to uri="tweetanalyzer:tweetWords"/>
+                    <to uri="tweetanalyzer:tweetWords"/>
+                    <to uri="tweetanalyzer:tweetWords"/>
+                    <to uri="tweetanalyzer:tweetWords"/>
+                    <to uri="tweetanalyzer:tweetWords"/>
                 </loadBalance>
             </multicast>
         </route>

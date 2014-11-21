@@ -1,5 +1,6 @@
 package com.pentalog.twitter.interfaces;
 
+import com.pentalog.twitter.pojo.TweetFilter;
 import twitter4j.Status;
 
 /**
@@ -10,5 +11,7 @@ import twitter4j.Status;
 public interface ISlaveNodeController extends INodeController {
 
     public int handleTweet(Status tweet);
+
+    public void filterSomeTweets(TweetFilter tweetFilter);
 
 }

@@ -25,7 +25,7 @@ public class NodeLauncher {
         io.hawt.embedded.Main howtIO = new io.hawt.embedded.Main();
         howtIO.setWarLocation("./core/target/classes/hawtio-default-1.4.36.war");
         try {
-            howtIO.run();
+           // howtIO.run();
         } catch (Exception e) {
             throw new RuntimeException(e);
         }

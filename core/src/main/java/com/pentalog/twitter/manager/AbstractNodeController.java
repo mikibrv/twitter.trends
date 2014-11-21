@@ -3,8 +3,10 @@ package com.pentalog.twitter.manager;
 import com.pentalog.twitter.manager.wrapper.NodeProxy;
 import com.pentalog.twitter.pojo.Node;
 import com.pentalog.twitter.pojo.NodeStats;
+import com.pentalog.twitter.pojo.TweetFilter;
 import org.apache.camel.model.ModelCamelContext;
 import org.apache.log4j.Logger;
+
 import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.List;
@@ -21,6 +23,8 @@ public abstract class AbstractNodeController {
     protected List<NodeProxy> clusterNodes = new ArrayList<NodeProxy>();
 
     protected Node currentNode;
+
+    protected TweetFilter tweetFilter = new TweetFilter();
 
     @Resource(name = "camelContext")
     protected ModelCamelContext camelContext;
