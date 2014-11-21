@@ -1,5 +1,6 @@
 package com.pentalog.twitter.mongo;
 
+import com.mongodb.AggregationOutput;
 import com.mongodb.BasicDBList;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DB;
@@ -18,8 +19,11 @@ import twitter4j.HashtagEntity;
 import twitter4j.Status;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -194,55 +198,79 @@ public class MongoQueries {
 		DBObject sortCriteria = new BasicDBObject();
 		sortCriteria.put("count", -1);
 		DBCursor results = wordsCollection.find(query, filter).sort(sortCriteria);
+		List<DBObject> dbObjects = results.toArray();
 		DBObject result = new BasicDBObject();
 		result.put("word", word);
-		result.put("intervals", results.toArray());
+		result.put("intervals", dbObjects);
 		return result;
 	}
 
-	public static List<String> getTopWordsCountAllTime(int start, int stop) {
+	public static DBObject getWordForSpecificInterval(String word, long beginDate) {
 
 		DBCollection wordsCollection = getCollectionStatisticsWords();
 		DBObject query = new BasicDBObject();
+		query.put("word", word);
+		query.put("beginDate", beginDate);
 		DBObject filter = new BasicDBObject();
 		filter.put("_id", false);
-		filter.put("word", true);
+		filter.put("beginDate", true);
 		filter.put("count", true);
-		DBObject sortCriteria = new BasicDBObject();
-		DBCursor results = wordsCollection.find(query, filter).sort(sortCriteria);
-		List<DBObject> dbObjects = results.toArray();
-		List<AuxWord> auxWords = new ArrayList<>();
-		for (DBObject dbObject : dbObjects) {
-			AuxWord auxWord = new AuxWord();
-			auxWord.word = (String) dbObject.get("word");
-			auxWord.count = (Integer) dbObject.get("count");
-			int indexOfObject = getIndexOfObject(auxWords, auxWord);
-			if(indexOfObject==-1) {
-				auxWords.add(auxWord);
-			}else{
-				auxWord.count+= auxWords.get(indexOfObject).count;
-				auxWords.set(indexOfObject, auxWord);
-			}
-		}
-		Comparator<? super AuxWord> comparator = new Comparator<AuxWord>() {
+		return wordsCollection.findOne(query, filter);
+	}
 
-			@Override public int compare(AuxWord o1, AuxWord o2) {
+	public static DBObject getTopWordsCountAllTime(int start, int stop) {
 
-				return o1.count.compareTo(o2.count) * (-1);
-			}
-		};
-		Collections.sort(auxWords, comparator);
-		List<String> result = new ArrayList<>();
-		for (int i = start; (i < stop && i < auxWords.size()); i++) {
-			result.add(auxWords.get(i).word);
+		DBCollection wordsCollection = getCollectionStatisticsWords();
+		List<DBObject> pipeline=new ArrayList<>();
+		DBObject group=new BasicDBObject();
+		group.put("_id","$word");
+		group.put("count", new BasicDBObject("$sum", "$count"));
+		DBObject sort=new BasicDBObject();
+		sort.put("count",-1);
+		pipeline.add(new BasicDBObject("$group",group));
+		pipeline.add(new BasicDBObject("$sort",sort));
+		pipeline.add(new BasicDBObject("$limit",50));
+		AggregationOutput aggregate = wordsCollection.aggregate(pipeline);
+		Iterable<DBObject> aggregationResult = aggregate.results();
+
+		DBObject result = new BasicDBObject();
+		DBObject mInDate = getMInDate();
+		DBObject maxDate = getMaxDate();
+		List<DBObject> series=new ArrayList<>();
+		List<Long> interrvalValues=new ArrayList<>();
+		for (long i = (long) mInDate.get("beginDate"); i <= (long) maxDate.get("beginDate"); i += 3600000) {
+			interrvalValues.add(i);
 		}
+
+
+
+		for(DBObject dbObject:aggregationResult){
+			String word = (String) dbObject.get("_id");
+			DBObject wordObject=new BasicDBObject();
+			wordObject.put("name",word);
+			List<Integer> countList=new ArrayList<>();
+			for (long i = (long) mInDate.get("beginDate"); i <= (long) maxDate.get("beginDate"); i += 3600000) {
+				DBObject wordForSpecificInterval = MongoQueries.getWordForSpecificInterval(word, i);
+				if(wordForSpecificInterval!=null){
+					countList.add((Integer) wordForSpecificInterval.get("count"));
+				}else{
+					countList.add((Integer) 0);
+				}
+			}
+			wordObject.put("data",countList);
+			series.add(wordObject);
+
+		}
+		result.put("categories",interrvalValues);
+		result.put("series",series);
+
 		return result;
 	}
 
-	public static int getIndexOfObject(List<AuxWord> auxWords, AuxWord auxWord){
-		for(int i=0;i< auxWords.size();i++){
-			if(auxWords.get(i).word.equalsIgnoreCase(auxWord.word))
-			{
+	public static int getIndexOfObject(List<AuxWord> auxWords, AuxWord auxWord) {
+
+		for (int i = 0; i < auxWords.size(); i++) {
+			if (auxWords.get(i).word.equalsIgnoreCase(auxWord.word)) {
 				return i;
 			}
 		}
@@ -250,24 +278,27 @@ public class MongoQueries {
 	}
 
 	public static DBObject getMInDate() {
+
 		DBCollection wordsCollection = getCollectionStatisticsWords();
 		DBObject query = new BasicDBObject();
 		DBObject filter = new BasicDBObject();
 		filter.put("_id", false);
 		filter.put("beginDate", true);
 		DBObject sortCriteria = new BasicDBObject();
-		sortCriteria.put("beginDate",1);
+		sortCriteria.put("beginDate", 1);
 		DBCursor results = wordsCollection.find(query, filter).sort(sortCriteria).limit(1);
 		return results.toArray().get(0);
 	}
+
 	public static DBObject getMaxDate() {
+
 		DBCollection wordsCollection = getCollectionStatisticsWords();
 		DBObject query = new BasicDBObject();
 		DBObject filter = new BasicDBObject();
 		filter.put("_id", false);
 		filter.put("beginDate", true);
 		DBObject sortCriteria = new BasicDBObject();
-		sortCriteria.put("beginDate",-1);
+		sortCriteria.put("beginDate", -1);
 		DBCursor results = wordsCollection.find(query, filter).sort(sortCriteria).limit(1);
 		return results.toArray().get(0);
 	}

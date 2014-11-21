@@ -1,5 +1,6 @@
 package com.pentalog;
 
+import com.mongodb.DBObject;
 import com.mongodb.MongoClient;
 import com.pentalog.twitter.model.mongoObjects.Word;
 import com.pentalog.twitter.mongo.MongoConnection;
@@ -61,6 +62,13 @@ public class TestMongo extends CamelTestSupport {
 		List<Word> words = MongoQueries.getWords(new Date().getTime());
 		Assert.assertNotNull(words);
 		System.out.println(words);
+	}
+
+	@Test
+	public void Test04TestMongoGetGraphData() {
+
+		DBObject graphData = MongoStatistics.getGraphData(0, 10);
+		Assert.assertNotNull(graphData);
 	}
 
 	private Status getFakeTweet(){

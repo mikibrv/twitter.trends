@@ -66,32 +66,20 @@ public class MongoStatistics {
 		return MongoQueries.getWordForAllIntervals(word);
 	}
 
-	public static List<String> getTopWordsCountAllTime(int start, int stop) {
-
-		if (!isInit()) {
-			init();
-		}
-		return MongoQueries.getTopWordsCountAllTime(start, stop);
-	}
+//	public static List<String> getTopWordsCountAllTime(int start, int stop) {
+//
+//		if (!isInit()) {
+//			init();
+//		}
+//		return MongoQueries.getTopWordsCountAllTime(start, stop);
+//	}
 
 	public static DBObject getGraphData(int start, int stop) {
 
 		if (!isInit()) {
 			init();
 		}
-		DBObject result=new BasicDBObject();
-		DBObject mInDate = MongoQueries.getMInDate();
-		DBObject maxDate = MongoQueries.getMaxDate();
-		result.put("minDate",mInDate);
-		result.put("maxDate",maxDate);
-		List<String> topWordsCountAllTime = MongoQueries.getTopWordsCountAllTime(start, stop);
-		BasicDBList basicDBList = new BasicDBList();
-		for (String word : topWordsCountAllTime) {
-			basicDBList.add(MongoQueries.getWordForAllIntervals(word));
-		}
-		result.put("topWordsList",basicDBList);
 
-
-		return result;
+		return MongoQueries.getTopWordsCountAllTime(start, stop);
 	}
 }
