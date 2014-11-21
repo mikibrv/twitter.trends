@@ -56,7 +56,12 @@
                 <to uri="log:com.pentalog.twitter"/>
                 <process ref="testTwitterBeanProcessor"/>
                 <to uri="bean:nodeStats?method=incrementCount"/>
-                <to uri="tweetanalyzer:tweetanalyzer"/>
+                <loadBalance>
+                    <roundRobin/>
+                    <to uri="tweetanalyzer:tweetanalyzer"/>
+                    <to uri="tweetanalyzer:tweetanalyzer"/>
+                    <to uri="tweetanalyzer:tweetanalyzer"/>
+                </loadBalance>
             </multicast>
         </route>
 
