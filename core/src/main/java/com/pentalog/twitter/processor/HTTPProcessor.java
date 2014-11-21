@@ -20,7 +20,7 @@ public class HTTPProcessor implements Processor {
         HttpServletRequest req = exchange.getIn().getBody(HttpServletRequest.class);
 
         // send a html response
-        exchange.getOut().setBody("<html><body>Book 123 is Camel in Action</body></html>");
+        exchange.getOut().setBody("<html><body>Camel in Action</body></html>");
     }
 
 }
