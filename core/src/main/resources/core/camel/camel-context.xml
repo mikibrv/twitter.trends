@@ -83,6 +83,11 @@
             <to uri="bean:nodeStats?method=getCountProcessed"/>
         </route>
 
+        <route>
+            <from uri="jetty:http://${local.ip}:${local.jetty.port}/getGraph/{}/{}"/>
+            <to uri="tweetanalyzer:getGraph"/>
+        </route>
+
         <!-- END OF SLAVE DECLARATIONS -->
 
 
