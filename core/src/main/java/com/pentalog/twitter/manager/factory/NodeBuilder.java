@@ -3,6 +3,7 @@ package com.pentalog.twitter.manager.factory;
 import com.pentalog.twitter.manager.enums.RouteConstants;
 import com.pentalog.twitter.manager.exceptions.NOInternetException;
 import com.pentalog.twitter.pojo.Node;
+import com.pentalog.twitter.pojo.NodeStats;
 import com.pentalog.twitter.pojo.NodeType;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Value;
@@ -31,6 +32,11 @@ public class NodeBuilder {
 
 
     private static final String NODE_PREFIX = "Node";
+
+    @Bean(name = "nodeStats")
+    public NodeStats buildNodeStats() {
+        return new NodeStats();
+    }
 
     @Bean(name = "currentNode")
     public Node buildNode() throws NOInternetException {

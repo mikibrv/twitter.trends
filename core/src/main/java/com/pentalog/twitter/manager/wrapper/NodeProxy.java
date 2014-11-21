@@ -7,8 +7,10 @@ import com.pentalog.twitter.manager.enums.RouteConstants;
 import com.pentalog.twitter.manager.exceptions.BadMessageException;
 import com.pentalog.twitter.manager.exceptions.SlaveCrashedException;
 import com.pentalog.twitter.pojo.Node;
+import org.apache.activemq.ActiveMQConnectionFactory;
 import org.apache.activemq.camel.component.ActiveMQComponent;
 import org.apache.activemq.camel.component.ActiveMQConfiguration;
+import org.apache.activemq.pool.PooledConnectionFactory;
 import org.apache.camel.Exchange;
 import org.apache.camel.Processor;
 import org.apache.camel.builder.ProxyBuilder;
@@ -51,9 +53,27 @@ public class NodeProxy implements Processor {
     }
 
     public void buildProxyOverNode() throws Exception {
+        final String brokerTo = getPathTOProxyJMS(node.getIP(), node.getJMSPort());
         ActiveMQConfiguration activeMQConfiguration = new ActiveMQConfiguration();
-        activeMQConfiguration.setBrokerURL(getPathTOProxyJMS(node.getIP(), node.getJMSPort()));
-        activeMQConfiguration.setAutoStartup(true);
+        activeMQConfiguration.setUseSingleConnection(true);
+        activeMQConfiguration.setUsePooledConnection(false);
+        activeMQConfiguration.setPreserveMessageQos(false);
+        activeMQConfiguration.setAcceptMessagesWhileStopping(false);
+        activeMQConfiguration.setConnectionFactory(new PooledConnectionFactory() {
+            {
+                setConnectionFactory(new ActiveMQConnectionFactory() {
+                    {
+                        setBrokerURL(brokerTo);
+                        setUseAsyncSend(true);
+                        setCopyMessageOnSend(false);
+                        setCloseTimeout(1000);
+                    }
+
+                });
+                setMaxConnections(1);
+            }
+        });
+        // activeMQConfiguration.set
         camelContext.addComponent(node.getUuid(), new ActiveMQComponent(activeMQConfiguration));
         LOGGER.warn("Added ActiveMQComponent to: " + getPathTOProxyJMS(node.getIP(), node.getJMSPort()));
         //build the proxies depending on nodeType;
@@ -73,6 +93,7 @@ public class NodeProxy implements Processor {
     public void clearProxy() {
         try {
             ActiveMQComponent component = (ActiveMQComponent) camelContext.getComponent(node.getUuid());
+            component.shutdown();
             component.stop();
         } catch (Exception e) {
             e.printStackTrace();
@@ -108,7 +129,7 @@ public class NodeProxy implements Processor {
                 try {
                     getSlaveController().handleTweet((twitter4j.Status) exchange.getIn().getBody());
                 } catch (Exception e) {
-                    LOGGER.warn("Node crashed: " + node.getUuid());
+                    LOGGER.warn("Node crashed: " + node.getUuid(), e);
                     currentNodeMasterController.removeNode(node.getUuid());
                     throw new SlaveCrashedException(e);
                 }

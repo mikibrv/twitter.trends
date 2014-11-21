@@ -3,9 +3,9 @@ package com.pentalog.twitter.master;
 import com.pentalog.twitter.manager.enums.RouteConstants;
 import com.pentalog.twitter.manager.exceptions.SlaveCrashedException;
 import com.pentalog.twitter.manager.wrapper.NodeProxy;
-import com.pentalog.twitter.processor.TwitterBeanProcessor;
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.processor.loadbalancer.FailOverLoadBalancer;
+import org.apache.camel.processor.loadbalancer.RoundRobinLoadBalancer;
 import org.apache.log4j.Logger;
 
 import java.util.ArrayList;
@@ -20,24 +20,24 @@ public class TweetBalancer extends RouteBuilder {
 
     protected Logger LOGGER = Logger.getLogger(this.getClass());
 
-    private FailOverLoadBalancer loadBalancer;
+    private RoundRobinLoadBalancer loadBalancer;
 
     public TweetBalancer(List<NodeProxy> slaves) {
         //only slaves allowed
-        loadBalancer = new FailOverLoadBalancer(new ArrayList<java.lang.Class<?>>() {
-            {
-                add(SlaveCrashedException.class);
-            }
-        });
-        loadBalancer.setMaximumFailoverAttempts(2);
-        loadBalancer.setRoundRobin(Boolean.TRUE);
+        loadBalancer = new RoundRobinLoadBalancer();
 
-        for (NodeProxy nodeProxy : slaves) {
-            if (nodeProxy.getNode().isSlave()) {
-                loadBalancer.addProcessor(nodeProxy);
-                LOGGER.warn("ADDED SLAVE TO LB: " + nodeProxy.getNode().getUuid());
+        if (slaves != null) {
+            for (NodeProxy nodeProxy : slaves) {
+                if (nodeProxy.getNode().isSlave()) {
+                    loadBalancer.addProcessor(nodeProxy);
+                    LOGGER.warn("ADDED SLAVE TO LB: " + nodeProxy.getNode().getUuid());
+                }
             }
         }
+    }
+
+    public void addProcessor(NodeProxy nodeProxy) {
+        this.loadBalancer.addProcessor(nodeProxy);
     }
 
     @Override
@@ -45,7 +45,11 @@ public class TweetBalancer extends RouteBuilder {
 
         from("seda:" + RouteConstants.MASTER_TWEETS_QUEUE)
                 .routeId(RouteConstants.MASTER_LB_TO_SLAVES)
-                .loadBalance(loadBalancer)
-                .to("seda:" + RouteConstants.MASTER_TWEETS_QUEUE); //send it back to the queue
+                .loadBalance(loadBalancer);
+    }
+
+    public void removeProcessor(NodeProxy nodeProxy) {
+        this.loadBalancer.removeProcessor(nodeProxy);
+
     }
 }

@@ -29,10 +29,11 @@
 
         <route id="masterTwitterStream" autoStartup="false">
             <from ref="twitterStreamEndpoint"/>
-            <process ref="testTwitterBeanProcessor"/>
-            <to uri="seda:tweetsQueue?size=1000"/>
+            <multicast>
+                <to uri="seda:tweetsQueue?size=1000"/>
+                <to uri="bean:nodeStats?method=incrementCount"/>
+            </multicast>
         </route>
-
 
 
         <route id="masterIncoming" autoStartup="true">
@@ -47,6 +48,20 @@
         <route id="slaveIncoming" autoStartup="true">
             <from uri="activemq:queue:SLAVE"/>
             <to uri="bean:slaveController"/>
+        </route>
+
+        <route id="slaveTOComponents">
+            <from uri="seda:slaveTweetHandler"/>
+            <multicast>
+                <to uri="log:com.pentalog.twitter"/>
+                <process ref="testTwitterBeanProcessor"/>
+                <to uri="bean:nodeStats?method=incrementCount"/>
+            </multicast>
+        </route>
+
+        <route>
+            <from uri="jetty:http://${local.ip}:${local.jetty.port}/stats"/>
+            <to uri="bean:nodeStats?method=getCountProcessed"/>
         </route>
 
         <!-- END OF SLAVE DECLARATIONS -->

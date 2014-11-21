@@ -2,14 +2,12 @@ package com.pentalog.twitter.manager;
 
 import com.pentalog.twitter.manager.wrapper.NodeProxy;
 import com.pentalog.twitter.pojo.Node;
+import com.pentalog.twitter.pojo.NodeStats;
 import org.apache.camel.model.ModelCamelContext;
 import org.apache.log4j.Logger;
-
 import javax.annotation.Resource;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 /**
  * User: mcsere
@@ -26,6 +24,9 @@ public abstract class AbstractNodeController {
 
     @Resource(name = "camelContext")
     protected ModelCamelContext camelContext;
+
+    @Resource(name = "nodeStats")
+    protected NodeStats nodeStats;
 
     public AbstractNodeController(Node node) {
         this.currentNode = node;
@@ -72,5 +73,9 @@ public abstract class AbstractNodeController {
             }
         }
         return null;
+    }
+
+    public NodeStats getNodeStats() {
+        return this.nodeStats;
     }
 }

@@ -7,8 +7,10 @@ import com.pentalog.twitter.manager.enums.RouteConstants;
 import com.pentalog.twitter.manager.wrapper.NodeProxy;
 import com.pentalog.twitter.master.TweetBalancer;
 import com.pentalog.twitter.pojo.Node;
+import org.apache.camel.Route;
 
 import java.util.UUID;
+import java.util.concurrent.TimeUnit;
 
 /**
  * User: mcsere
@@ -21,6 +23,8 @@ public class MasterNodeController extends AbstractNodeController implements IMas
         super(node);
     }
 
+    TweetBalancer tweetBalancer;
+
     @Override
     public boolean addNode(Node node) {
         super.addNode(node);
@@ -29,8 +33,11 @@ public class MasterNodeController extends AbstractNodeController implements IMas
         nodeProxy.getSlaveController().ping(System.currentTimeMillis());
         nodeProxy.setCurrentNodeMasterController(this);
         try {
-            camelContext.removeRoute(RouteConstants.MASTER_LB_TO_SLAVES);
-            camelContext.addRoutes(new TweetBalancer(this.clusterNodes));
+            if (tweetBalancer == null) {
+                tweetBalancer = new TweetBalancer(null);
+                camelContext.addRoutes(tweetBalancer);
+            }
+            tweetBalancer.addProcessor(nodeProxy);
         } catch (Exception e) {
             e.printStackTrace();
             return false;
@@ -42,11 +49,11 @@ public class MasterNodeController extends AbstractNodeController implements IMas
     public void removeNode(String nodeID) {
         NodeProxy toRemove = getNodeByUUID(nodeID);
         if (toRemove != null) {
-            toRemove.clearProxy();
-            clusterNodes.remove(toRemove);
             try {
-                camelContext.removeRoute(RouteConstants.MASTER_LB_TO_SLAVES);
-                camelContext.addRoutes(new TweetBalancer(this.clusterNodes));
+                toRemove.clearProxy();
+                if (tweetBalancer != null) {
+                    tweetBalancer.removeProcessor(toRemove);
+                }
             } catch (Exception e) {
                 e.printStackTrace();
             }

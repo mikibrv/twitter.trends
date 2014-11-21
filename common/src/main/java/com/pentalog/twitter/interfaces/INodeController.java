@@ -2,6 +2,7 @@ package com.pentalog.twitter.interfaces;
 
 
 import com.pentalog.twitter.pojo.Node;
+import com.pentalog.twitter.pojo.NodeStats;
 
 import java.util.List;
 
@@ -24,4 +25,6 @@ public interface INodeController {
     public Node getMaster();
 
     public void updateClusterNodes(List<Node> clusterNodes);
+
+    public NodeStats getNodeStats();
 }
