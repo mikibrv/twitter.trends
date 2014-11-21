@@ -16,8 +16,6 @@ public class TwitterBeanProcessor implements Processor {
 
     @Override
     public void process(Exchange exchange) throws Exception {
-
-        System.out.println("TOTAL " + callsCaptured);
-		callsCaptured++;
+        callsCaptured++;
     }
 }
