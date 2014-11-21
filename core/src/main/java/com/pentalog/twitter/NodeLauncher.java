@@ -7,6 +7,8 @@ import org.springframework.beans.factory.support.DefaultListableBeanFactory;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.context.support.GenericApplicationContext;
 
+import java.util.Date;
+
 /**
  * User: mcsere
  * Date: 11/11/2014
@@ -17,7 +19,8 @@ public class NodeLauncher {
 
     public static void main(String[] args) throws InterruptedException, NOInternetException {
 
-        new ClassPathXmlApplicationContext(
-                new String[]{"core/applicationContext.xml"});
+		System.out.println(new Date(1416560400000L));
+//        new ClassPathXmlApplicationContext(
+//                new String[]{"core/applicationContext.xml"});
     }
 }
