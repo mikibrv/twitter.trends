@@ -8,7 +8,7 @@ import com.mongodb.DBCursor;
 import com.mongodb.DBObject;
 import com.mongodb.MongoClient;
 import com.mongodb.MongoException;
-import com.pentalog.twitter.model.mongoObjects.AuxObject;
+import com.pentalog.twitter.model.mongoObjects.AuxWord;
 import com.pentalog.twitter.model.mongoObjects.Country;
 import com.pentalog.twitter.model.mongoObjects.TweetInfoLight;
 import com.pentalog.twitter.model.mongoObjects.Word;
@@ -18,7 +18,6 @@ import twitter4j.HashtagEntity;
 import twitter4j.Status;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
@@ -212,37 +211,37 @@ public class MongoQueries {
 		DBObject sortCriteria = new BasicDBObject();
 		DBCursor results = wordsCollection.find(query, filter).sort(sortCriteria);
 		List<DBObject> dbObjects = results.toArray();
-		List<AuxObject> auxObjects = new ArrayList<>();
+		List<AuxWord> auxWords = new ArrayList<>();
 		for (DBObject dbObject : dbObjects) {
-			AuxObject auxObject = new AuxObject();
-			auxObject.word = (String) dbObject.get("word");
-			auxObject.count = (Integer) dbObject.get("count");
-			int indexOfObject = getIndexOfObject(auxObjects, auxObject);
+			AuxWord auxWord = new AuxWord();
+			auxWord.word = (String) dbObject.get("word");
+			auxWord.count = (Integer) dbObject.get("count");
+			int indexOfObject = getIndexOfObject(auxWords, auxWord);
 			if(indexOfObject==-1) {
-				auxObjects.add(auxObject);
+				auxWords.add(auxWord);
 			}else{
-				auxObject.count+=auxObjects.get(indexOfObject).count;
-				auxObjects.set(indexOfObject, auxObject);
+				auxWord.count+= auxWords.get(indexOfObject).count;
+				auxWords.set(indexOfObject, auxWord);
 			}
 		}
-		Comparator<? super AuxObject> comparator = new Comparator<AuxObject>() {
+		Comparator<? super AuxWord> comparator = new Comparator<AuxWord>() {
 
-			@Override public int compare(AuxObject o1, AuxObject o2) {
+			@Override public int compare(AuxWord o1, AuxWord o2) {
 
 				return o1.count.compareTo(o2.count) * (-1);
 			}
 		};
-		Collections.sort(auxObjects, comparator);
+		Collections.sort(auxWords, comparator);
 		List<String> result = new ArrayList<>();
-		for (int i = start; (i < stop && i < auxObjects.size()); i++) {
-			result.add(auxObjects.get(i).word);
+		for (int i = start; (i < stop && i < auxWords.size()); i++) {
+			result.add(auxWords.get(i).word);
 		}
 		return result;
 	}
 
-	public static int getIndexOfObject(List<AuxObject> auxObjects, AuxObject auxObject){
-		for(int i=0;i<auxObjects.size();i++){
-			if(auxObjects.get(i).word.equalsIgnoreCase(auxObject.word))
+	public static int getIndexOfObject(List<AuxWord> auxWords, AuxWord auxWord){
+		for(int i=0;i< auxWords.size();i++){
+			if(auxWords.get(i).word.equalsIgnoreCase(auxWord.word))
 			{
 				return i;
 			}
