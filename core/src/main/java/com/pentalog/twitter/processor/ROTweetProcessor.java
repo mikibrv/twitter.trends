@@ -1,5 +1,6 @@
 package com.pentalog.twitter.processor;
 
+import com.google.gson.Gson;
 import com.mongodb.BasicDBObject;
 import org.apache.camel.EndpointInject;
 import org.apache.camel.Exchange;
@@ -43,7 +44,6 @@ public class ROTweetProcessor implements Processor {
                 isFromRO = containsBrasov(isFromRO, tweet.getPlace().getCountry());
                 isFromRO = containsBrasov(isFromRO, tweet.getPlace().getName());
                 isFromRO = containsBrasov(isFromRO, tweet.getUser().getLocation());
-                isFromRO = containsBrasov(isFromRO, tweet.getUser().getLocation());
                 isFromRO = containsBrasov(isFromRO, tweet.getUser().getName());
             } catch (Exception e) {
                 //do nothing;
@@ -51,6 +51,13 @@ public class ROTweetProcessor implements Processor {
             if (isFromRO) {
                 BasicDBObject tweetStringObj = new BasicDBObject();
                 tweetStringObj.append("tweet", tweet.getUser().getName() + " :==> " + tweet.getText());
+                String tweetJson = "";
+                try {
+                    tweetJson = new Gson().toJson(tweet);
+                } catch (Exception e) {
+                    //do nothing;
+                }
+                tweetStringObj.append("fullTweet", tweetJson);
                 producer.sendBody(tweetStringObj);
             }
         }

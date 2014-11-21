@@ -56,6 +56,7 @@
                 <to uri="log:com.pentalog.twitter"/>
                 <process ref="testTwitterBeanProcessor"/>
                 <process ref="roTweetProcessor"/>
+                <process ref="saveTweets"/>
                 <to uri="bean:nodeStats?method=incrementCount"/>
                 <loadBalance>
                     <roundRobin/>
@@ -69,6 +70,12 @@
         <route id="slaveROTweets">
             <from uri="seda:tweetsAboutRO"/>
             <to uri="mongodb:mongoConnectionBean?database=statistics&amp;collection=roTweets&amp;operation=insert"/>
+        </route>
+
+
+        <route id="saveTweets">
+            <from uri="seda:saveTweets"/>
+            <to uri="mongodb:mongoConnectionBean?database=statistics&amp;collection=allTweets&amp;operation=insert"/>
         </route>
 
         <route>

@@ -99,6 +99,12 @@
             <artifactId>camel-mongodb</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>com.google.code.gson</groupId>
+            <artifactId>gson</artifactId>
+        </dependency>
+
+
 
     </dependencies>
 

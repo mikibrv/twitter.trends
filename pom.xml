@@ -28,6 +28,7 @@
         <twitter4j.version>4.0.2</twitter4j.version>
         <freemarker.version>2.3.20</freemarker.version>
         <mongo.version>2.12.4</mongo.version>
+        <gson.version>2.2.4</gson.version>
 
 
         <jetty.port>8080</jetty.port>
@@ -169,6 +170,13 @@
                 <artifactId>camel-mongodb</artifactId>
                 <version>${camel.version}</version>
             </dependency>
+
+            <dependency>
+                <groupId>com.google.code.gson</groupId>
+                <artifactId>gson</artifactId>
+                <version>${gson.version}</version>
+            </dependency>
+
 
         </dependencies>
     </dependencyManagement>
