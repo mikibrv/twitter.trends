@@ -56,6 +56,7 @@
                 <to uri="log:com.pentalog.twitter"/>
                 <process ref="testTwitterBeanProcessor"/>
                 <to uri="bean:nodeStats?method=incrementCount"/>
+                <to uri="tweetanalyzer:tweetanalyzer"/>
             </multicast>
         </route>
 

@@ -17,8 +17,8 @@ public class tweetwordsComponentTest extends CamelTestSupport {
     protected RouteBuilder createRouteBuilder() throws Exception {
         return new RouteBuilder() {
             public void configure() {
-                from("tweetwords://foo")
-                  .to("tweetwords://bar")
+                from("tweetanalyzer://foo")
+                  .to("tweetanalyzer://bar")
                   .to("mock:result");
             }
         };

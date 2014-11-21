@@ -39,12 +39,6 @@
 
     <dependencyManagement>
         <dependencies>
-            <dependency>
-                <groupId>com.pentalog</groupId>
-                <artifactId>twitter.trends.tweetanalyzer</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-
 
             <dependency>
                 <groupId>com.pentalog</groupId>

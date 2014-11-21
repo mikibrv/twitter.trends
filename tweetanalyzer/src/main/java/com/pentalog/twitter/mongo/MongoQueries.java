@@ -172,7 +172,7 @@ public class MongoQueries {
 				if (word.length() < 2) {
 					continue;
 				}
-				if (!stopWords.contains(word)) {
+				if (!MongoUtils.containsInList(stopWords,word)) {
 					Word wordObject = new Word();
 					wordObject.setWordValue(word);
 					wordObject.setBeginDateValue(MongoUtils.trimDateToHours(tweetDate));

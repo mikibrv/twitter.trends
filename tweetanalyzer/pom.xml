@@ -9,7 +9,7 @@
 
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>twitter.trends.tweetwords</artifactId>
+    <artifactId>twitter.trends.tweetanalyzer</artifactId>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -17,11 +17,6 @@
     </properties>
 
     <dependencies>
-
-        <dependency>
-            <groupId>com.pentalog</groupId>
-            <artifactId>twitter.trends.core</artifactId>
-        </dependency>
 
         <dependency>
             <groupId>com.pentalog</groupId>
