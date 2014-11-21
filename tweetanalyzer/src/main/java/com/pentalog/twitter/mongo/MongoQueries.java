@@ -7,23 +7,21 @@ import com.mongodb.DBCollection;
 import com.mongodb.DBCursor;
 import com.mongodb.DBObject;
 import com.mongodb.MongoClient;
-import com.mongodb.MongoClientException;
 import com.mongodb.MongoException;
+import com.pentalog.twitter.model.mongoObjects.AuxObject;
 import com.pentalog.twitter.model.mongoObjects.Country;
 import com.pentalog.twitter.model.mongoObjects.TweetInfoLight;
 import com.pentalog.twitter.model.mongoObjects.Word;
-import org.apache.camel.Endpoint;
 import org.apache.camel.Message;
-import org.apache.camel.ProducerTemplate;
 import org.apache.camel.impl.DefaultMessage;
 import twitter4j.HashtagEntity;
 import twitter4j.Status;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.Future;
 
 /**
  * Created by agherasim on 18/11/2014.
@@ -145,7 +143,8 @@ public class MongoQueries {
 		return statisticsDB.getCollection(collectionName);
 	}
 
-	public static void processWords(Status tweet){
+	public static void processWords(Status tweet) {
+
 		Message message = new DefaultMessage();
 		String tweetLang = tweet.getLang();
 		long tweetID = tweet.getId();
@@ -169,10 +168,10 @@ public class MongoQueries {
 			tweetInfo.setTweetDateValue(tweetDate);
 			List<String> stopWords = MongoQueries.getStopWords();
 			for (String word : words) {
-				if (word.length() < 2) {
+				if (word.length() < 3) {
 					continue;
 				}
-				if (!MongoUtils.containsInList(stopWords,word)) {
+				if (!MongoUtils.containsInList(stopWords, word)) {
 					Word wordObject = new Word();
 					wordObject.setWordValue(word);
 					wordObject.setBeginDateValue(MongoUtils.trimDateToHours(tweetDate));
@@ -183,4 +182,97 @@ public class MongoQueries {
 		}
 		MongoQueries.saveWordsIntoDB(wordObjects);
 	}
+
+	public static DBObject getWordForAllIntervals(String word) {
+
+		DBCollection wordsCollection = getCollectionStatisticsWords();
+		DBObject query = new BasicDBObject();
+		query.put("word", word);
+		DBObject filter = new BasicDBObject();
+		filter.put("_id", false);
+		filter.put("beginDate", true);
+		filter.put("count", true);
+		DBObject sortCriteria = new BasicDBObject();
+		sortCriteria.put("count", -1);
+		DBCursor results = wordsCollection.find(query, filter).sort(sortCriteria);
+		DBObject result = new BasicDBObject();
+		result.put("word", word);
+		result.put("intervals", results.toArray());
+		return result;
+	}
+
+	public static List<String> getTopWordsCountAllTime(int start, int stop) {
+
+		DBCollection wordsCollection = getCollectionStatisticsWords();
+		DBObject query = new BasicDBObject();
+		DBObject filter = new BasicDBObject();
+		filter.put("_id", false);
+		filter.put("word", true);
+		filter.put("count", true);
+		DBObject sortCriteria = new BasicDBObject();
+		DBCursor results = wordsCollection.find(query, filter).sort(sortCriteria);
+		List<DBObject> dbObjects = results.toArray();
+		List<AuxObject> auxObjects = new ArrayList<>();
+		for (DBObject dbObject : dbObjects) {
+			AuxObject auxObject = new AuxObject();
+			auxObject.word = (String) dbObject.get("word");
+			auxObject.count = (Integer) dbObject.get("count");
+			int indexOfObject = getIndexOfObject(auxObjects, auxObject);
+			if(indexOfObject==-1) {
+				auxObjects.add(auxObject);
+			}else{
+				auxObject.count+=auxObjects.get(indexOfObject).count;
+				auxObjects.set(indexOfObject, auxObject);
+			}
+		}
+		Comparator<? super AuxObject> comparator = new Comparator<AuxObject>() {
+
+			@Override public int compare(AuxObject o1, AuxObject o2) {
+
+				return o1.count.compareTo(o2.count) * (-1);
+			}
+		};
+		Collections.sort(auxObjects, comparator);
+		List<String> result = new ArrayList<>();
+		for (int i = start; (i < stop && i < auxObjects.size()); i++) {
+			result.add(auxObjects.get(i).word);
+		}
+		return result;
+	}
+
+	public static int getIndexOfObject(List<AuxObject> auxObjects, AuxObject auxObject){
+		for(int i=0;i<auxObjects.size();i++){
+			if(auxObjects.get(i).word.equalsIgnoreCase(auxObject.word))
+			{
+				return i;
+			}
+		}
+		return -1;
+	}
+
+	public static DBObject getMInDate() {
+		DBCollection wordsCollection = getCollectionStatisticsWords();
+		DBObject query = new BasicDBObject();
+		DBObject filter = new BasicDBObject();
+		filter.put("_id", false);
+		filter.put("beginDate", true);
+		DBObject sortCriteria = new BasicDBObject();
+		sortCriteria.put("beginDate",1);
+		DBCursor results = wordsCollection.find(query, filter).sort(sortCriteria).limit(1);
+		return results.toArray().get(0);
+	}
+	public static DBObject getMaxDate() {
+		DBCollection wordsCollection = getCollectionStatisticsWords();
+		DBObject query = new BasicDBObject();
+		DBObject filter = new BasicDBObject();
+		filter.put("_id", false);
+		filter.put("beginDate", true);
+		DBObject sortCriteria = new BasicDBObject();
+		sortCriteria.put("beginDate",-1);
+		DBCursor results = wordsCollection.find(query, filter).sort(sortCriteria).limit(1);
+		return results.toArray().get(0);
+	}
 }
+
+
+

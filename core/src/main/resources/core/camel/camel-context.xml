@@ -60,9 +60,9 @@
                 <to uri="bean:nodeStats?method=incrementCount"/>
                 <loadBalance>
                     <roundRobin/>
-                    <to uri="tweetanalyzer:tweetanalyzer"/>
-                    <to uri="tweetanalyzer:tweetanalyzer"/>
-                    <to uri="tweetanalyzer:tweetanalyzer"/>
+                    <to uri="tweetanalyzer:tweetWords"/>
+                    <to uri="tweetanalyzer:tweetWords"/>
+                    <to uri="tweetanalyzer:tweetWords"/>
                 </loadBalance>
             </multicast>
         </route>
@@ -78,9 +78,15 @@
             <to uri="mongodb:mongoConnectionBean?database=statistics&amp;collection=allTweets&amp;operation=insert"/>
         </route>
 
+
         <route>
             <from uri="jetty:http://${local.ip}:${local.jetty.port}/stats"/>
             <to uri="bean:nodeStats?method=getCountProcessed"/>
+        </route>
+
+        <route>
+            <from uri="jetty:http://${local.ip}:${local.jetty.port}/getGraph/{}/{}"/>
+            <to uri="tweetanalyzer:getGraph"/>
         </route>
 
         <!-- END OF SLAVE DECLARATIONS -->
