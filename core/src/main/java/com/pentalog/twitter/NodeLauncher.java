@@ -18,9 +18,7 @@ public class NodeLauncher {
 
 
     public static void main(String[] args) throws InterruptedException, NOInternetException {
-
-		System.out.println(new Date(1416560400000L));
-//        new ClassPathXmlApplicationContext(
-//                new String[]{"core/applicationContext.xml"});
+       new ClassPathXmlApplicationContext(
+                new String[]{"core/applicationContext.xml"});
     }
 }

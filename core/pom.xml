@@ -131,9 +131,9 @@
 
                 <local.jms.port>61617</local.jms.port>
                 <local.is.master>false</local.is.master>
-                <local.ip>10.185.40.98</local.ip>
+                <local.ip>10.185.40.90</local.ip>
                 <local.jms.brokername>slavebroker</local.jms.brokername>
-                <local.jetty.port>8081</local.jetty.port>
+                <local.jetty.port>8021</local.jetty.port>
             </properties>
             <build>
                 <plugins>
@@ -160,9 +160,9 @@
 
                 <local.jms.port>61618</local.jms.port>
                 <local.is.master>false</local.is.master>
-                <local.ip>10.185.40.98</local.ip>
+                <local.ip>10.185.40.90</local.ip>
                 <local.jms.brokername>slavebrokersecond</local.jms.brokername>
-                <local.jetty.port>8082</local.jetty.port>
+                <local.jetty.port>8022</local.jetty.port>
             </properties>
             <build>
                 <plugins>
@@ -189,9 +189,9 @@
 
                 <local.jms.port>61616</local.jms.port>
                 <local.jms.brokername>masterbroker</local.jms.brokername>
-                <local.ip>10.185.40.98</local.ip>
+                <local.ip>10.185.40.90</local.ip>
                 <local.is.master>true</local.is.master>
-                <local.jetty.port>8080</local.jetty.port>
+                <local.jetty.port>8020</local.jetty.port>
             </properties>
             <build>
                 <plugins>
