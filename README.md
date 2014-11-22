@@ -11,13 +11,18 @@ COUNT SORT MOST USED TWEETS
 db.words.aggregate([
 {$group : {_id : "$word", countWords : {$sum : "$count"}}},
 {$sort:{countWords:-1}},
-{$limit:50}
+{$limit:100}
 ]);
+
+
 
 Query Count per word
 db.words.aggregate([
-{$match : {word:"Bieber"}},
-{$group : {_id : "$word", countWords : {$sum : "$count"}}},
-{$sort:{countWords:-1}},
-{$limit:50}
-]);
+   {$match : {word:"Bieber"}},
+   {$group : {_id : "$word", countWords : {$sum : "$count"}}},
+   {$sort:{countWords:-1}},
+   {$limit:50}
+   ]);
+
+
+   db.allTweets.find({"ID":536070893240602624});

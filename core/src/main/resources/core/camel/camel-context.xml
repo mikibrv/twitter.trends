@@ -43,7 +43,7 @@
 
 
         <route id="masterWEBSocket">
-            <from uri="seda:masterDisplayFilteredTweets"/>
+            <from uri="seda:masterDisplayFilteredTweets?size=1000"/>
             <to uri="websocket:camel-tweet?sendToAll=true&amp;host=${local.ip}&amp;port=${local.websocket.port}"/>
         </route>
 

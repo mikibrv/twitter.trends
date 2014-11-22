@@ -8,6 +8,7 @@ import com.pentalog.twitter.mongo.MongoQueries;
 import com.pentalog.twitter.mongo.MongoStatistics;
 import org.apache.camel.test.junit4.CamelTestSupport;
 import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
 import twitter4j.GeoLocation;
 import twitter4j.HashtagEntity;
@@ -30,6 +31,7 @@ import java.util.List;
 public class TestMongo extends CamelTestSupport {
 
 	@Test
+    @Ignore
 	public void Test01MongoConnection(){
 
 		MongoConnection mongoConnection=MongoConnection.getInstance();
@@ -53,7 +55,9 @@ public class TestMongo extends CamelTestSupport {
 	}
 
 	@Test
-	public void Test03TestMongoQueriesGetSpecificWord() {
+    @Ignore
+
+    public void Test03TestMongoQueriesGetSpecificWord() {
 
 		MongoConnection mongoConnection = MongoConnection.getInstance();
 		MongoClient mongoClient = mongoConnection.getMongoClient();
@@ -65,7 +69,9 @@ public class TestMongo extends CamelTestSupport {
 	}
 
 	@Test
-	public void Test04TestMongoGetGraphData() {
+    @Ignore
+
+    public void Test04TestMongoGetGraphData() {
 
 		DBObject graphData = MongoStatistics.getGraphData(0, 10);
 		Assert.assertNotNull(graphData);

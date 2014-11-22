@@ -19,7 +19,7 @@ $(document).ready(function () {
     var room = {
         join: function (name) {
             this._username = name;
-            var location = "ws://10.185.40.90:8030/camel-tweet";
+            var location = "ws://10.10.0.181:8030/camel-tweet";
             this._ws = new WebSocket(location);
             this._ws.onmessage = this._onmessage;
             this._ws.onclose = this._onclose;
@@ -105,9 +105,9 @@ $(document).ready(function () {
     }
 
     var refreshChart = function () {
-        //  http://10.185.40.90:8081/charts
+        //  http://10.10.0.181:8081/charts
         if (lastIndex == 0) {
-            jQuery.getJSON('http://10.185.40.90:8081/charts', function (data) {
+            jQuery.getJSON('http://10.10.0.181:8081/charts', function (data) {
                 globalData = data;
                 lastIndex = 0;
                 splitTheData();
@@ -126,7 +126,7 @@ $(document).ready(function () {
 
     jQuery("#IBRinput").change(function () {
         var toFilter = $(this).val();
-        jQuery.getJSON('http://10.185.40.90:8081/getTweets/' + toFilter, function (data) {
+        jQuery.getJSON('http://10.10.0.181:8081/getTweets/' + toFilter, function (data) {
             console.log("ok");
             $(this).val("");
         });

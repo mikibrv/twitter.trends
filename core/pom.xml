@@ -143,11 +143,11 @@
             </activation>
             <properties>
                 <master.jms.port>61616</master.jms.port>
-                <master.ip>10.185.40.90</master.ip>
+                <master.ip>10.10.0.181</master.ip>
 
                 <local.jms.port>61617</local.jms.port>
                 <local.is.master>false</local.is.master>
-                <local.ip>10.185.40.90</local.ip>
+                <local.ip>10.10.0.181</local.ip>
                 <local.jms.brokername>slavebroker</local.jms.brokername>
                 <local.jetty.port>8021</local.jetty.port>
                 <local.websocket.port>8031</local.websocket.port>
@@ -181,11 +181,11 @@
             </activation>
             <properties>
                 <master.jms.port>61616</master.jms.port>
-                <master.ip>10.185.40.90</master.ip>
+                <master.ip>10.10.0.181</master.ip>
 
                 <local.jms.port>61618</local.jms.port>
                 <local.is.master>false</local.is.master>
-                <local.ip>10.185.40.90</local.ip>
+                <local.ip>10.10.0.181</local.ip>
                 <local.jms.brokername>slavebrokersecond</local.jms.brokername>
                 <local.jetty.port>8022</local.jetty.port>
                 <local.websocket.port>8032</local.websocket.port>
@@ -215,11 +215,11 @@
             </activation>
             <properties>
                 <master.jms.port>61616</master.jms.port>
-                <master.ip>10.185.40.90</master.ip>
+                <master.ip>10.10.0.181</master.ip>
 
                 <local.jms.port>61616</local.jms.port>
                 <local.jms.brokername>masterbroker</local.jms.brokername>
-                <local.ip>10.185.40.90</local.ip>
+                <local.ip>10.10.0.181</local.ip>
                 <local.is.master>true</local.is.master>
                 <local.jetty.port>8020</local.jetty.port>
                 <local.websocket.port>8030</local.websocket.port>

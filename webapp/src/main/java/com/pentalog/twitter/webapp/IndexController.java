@@ -39,7 +39,7 @@ public class IndexController {
 // resources at the cost of having to buffer response content in memory in some cases.
         RestTemplate restTemplate = new RestTemplate();
 
-        return restTemplate.getForObject("http://10.185.40.90:8021/getGraph/1/1", String.class);
+        return restTemplate.getForObject("http://10.10.0.181:8021/getGraph/1/1", String.class);
     }
 
     @RequestMapping("/getTweets/{toFilter}")
@@ -47,7 +47,7 @@ public class IndexController {
     @ResponseBody
     String getTweets(@PathVariable String toFilter) {
         RestTemplate restTemplate = new RestTemplate();
-        return restTemplate.getForObject("http://10.185.40.90:8020/startFiltering/?toFilter=" + toFilter, String.class);
+        return restTemplate.getForObject("http://10.10.0.181:8020/startFiltering/?toFilter=" + toFilter, String.class);
     }
 
     @RequestMapping("/getTweets/")
@@ -55,6 +55,6 @@ public class IndexController {
     @ResponseBody
     String stopTweets() {
         RestTemplate restTemplate = new RestTemplate();
-        return restTemplate.getForObject("http://10.185.40.90:8020/startFiltering/", String.class);
+        return restTemplate.getForObject("http://10.10.0.181:8020/startFiltering/", String.class);
     }
 }
