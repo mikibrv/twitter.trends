@@ -18,38 +18,10 @@ import java.util.List;
  */
 public class TweetBalancer extends RouteBuilder {
 
-    protected Logger LOGGER = Logger.getLogger(this.getClass());
-
-    private RoundRobinLoadBalancer loadBalancer;
-
-    public TweetBalancer(List<NodeProxy> slaves) {
-        //only slaves allowed
-        loadBalancer = new RoundRobinLoadBalancer();
-
-        if (slaves != null) {
-            for (NodeProxy nodeProxy : slaves) {
-                if (nodeProxy.getNode().isSlave()) {
-                    loadBalancer.addProcessor(nodeProxy);
-                    LOGGER.warn("ADDED SLAVE TO LB: " + nodeProxy.getNode().getUuid());
-                }
-            }
-        }
-    }
-
-    public void addProcessor(NodeProxy nodeProxy) {
-        this.loadBalancer.addProcessor(nodeProxy);
-    }
-
     @Override
     public void configure() throws Exception {
 
-        from("seda:" + RouteConstants.MASTER_TWEETS_QUEUE)
-                .routeId(RouteConstants.MASTER_LB_TO_SLAVES)
-                .loadBalance(loadBalancer);
     }
 
-    public void removeProcessor(NodeProxy nodeProxy) {
-        this.loadBalancer.removeProcessor(nodeProxy);
 
-    }
 }
