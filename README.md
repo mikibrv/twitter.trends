@@ -13,3 +13,11 @@ db.words.aggregate([
 {$sort:{countWords:-1}},
 {$limit:50}
 ]);
+
+Query Count per word
+db.words.aggregate([
+{$match : {word:"Bieber"}},
+{$group : {_id : "$word", countWords : {$sum : "$count"}}},
+{$sort:{countWords:-1}},
+{$limit:50}
+]);
