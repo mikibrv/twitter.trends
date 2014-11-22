@@ -1,63 +1,61 @@
 .containerBottomRight {
-	
-	position: absolute;
-	right: 0;
-	bottom: 0;
-	border: 1px solid rgba(63, 63, 63, 0.5);;
-	height: 350px;
-	overflow: hidden;
-	border-radius: 5px;
-	min-width: 362px;
-    max-width: 562px;
+
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    border: 1px solid rgba(63, 63, 63, 0.5);;
+    height: 280px;
+    overflow: hidden;
+    border-radius: 5px;
+    min-width: 362px;
+    max-width: 692px;
 
 }
 
-.table-striped>tbody>tr:first-child {
+.table-striped > tbody > tr:first-child {
 
-	background-color: rgba(42, 143, 34, 0.5);
-	font-weight: 600;
+    background-color: rgba(42, 143, 34, 0.5);
+    font-weight: 600;
 }
 
 .innerBottomRight {
 
-	border-bottom: 1px solid rgba(63, 63, 63, 0.5);
-	height: 90%;
-	border-radius: 0;	
-	overflow: hidden;
-
+    border-bottom: 1px solid rgba(63, 63, 63, 0.5);
+    height: 90%;
+    border-radius: 0;
+    overflow: hidden;
 
 }
 
 #IBRinput {
 
-	height: 10%;
-	width: 100%;
+    height: 10%;
+    width: 100%;
 }
 
 #highCharts {
-	
-	margin: 0 auto;
-	height: 515px;
-	width: 100%;
-	border: 1px solid black;
+
+    margin: 0 auto;
+    height: 415px;
+    width: 100%;
+    border: 1px solid black;
 }
 
 #myBtn {
 
-	position: absolute;
-	top: 0;
-	left: 0;
+    position: absolute;
+    top: 0;
+    left: 0;
 }
 
 #controls {
 
-	position: relative;
+    position: relative;
 
 }
 
-.animate.ng-enter, 
-.animate.ng-leave
-{ 
+.animate.ng-enter,
+.animate.ng-leave {
     -webkit-transition: 800ms cubic-bezier(0.455, 0.030, 0.515, 0.955) all;
     -moz-transition: 800ms cubic-bezier(0.455, 0.030, 0.515, 0.955) all;
     -ms-transition: 800ms cubic-bezier(0.455, 0.030, 0.515, 0.955) all;
@@ -68,17 +66,17 @@
     display: block;
     overflow: hidden;
     text-overflow: clip;
-    white-space:nowrap;
-} 
- 
+    white-space: nowrap;
+}
+
 .animate.ng-leave.animate.ng-leave-active,
 .animate.ng-enter {
     opacity: 0;
     width: 0;
-    
+
 }
- 
-.animate.ng-enter.animate.ng-enter-active, 
+
+.animate.ng-enter.animate.ng-enter-active,
 .animate.ng-leave {
     opacity: 1;
     width: 100%;
@@ -87,5 +85,8 @@
 
 @keyframes newTweet {
 
-	
+}
+
+.twitterlogo {
+    margin-left: 10%;
 }

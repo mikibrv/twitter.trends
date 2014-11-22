@@ -177,7 +177,7 @@
         <profile>
             <id>slave2</id>
             <activation>
-                <activeByDefault>true</activeByDefault>
+                <activeByDefault>false</activeByDefault>
             </activation>
             <properties>
                 <master.jms.port>61616</master.jms.port>

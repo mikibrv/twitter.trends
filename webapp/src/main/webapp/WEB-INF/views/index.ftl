@@ -20,8 +20,8 @@
 
 </div>
 
-<img width="400" height="200" src="http://www.site-seeker.com/wp-content/uploads/twitter-logo.png"/>
-<h1>                trends 1.0</h1>
+<img class="twitterlogo" width="400" height="200" src="http://www.site-seeker.com/wp-content/uploads/twitter-logo.png"/>
+<h1>              </h1>
 
 <div class = 'containerBottomRight'>
     <div class = 'innerBottomRight'>
