@@ -1,0 +1,48 @@
+sQueries:
+
+use statistics
+	***
+	Get all stopwords:
+		db.constants.find({stopwords:{$exists:1}})
+	Check if word is a stopword:
+		db.constants.find({stopwords:"word"}).count()		//Don't need anymore
+	Get all words from an interval:
+		db.words.find({beginDate:1})
+	Get specific word from specific interval:
+		db.words.find({beginDate:1,word:"forest"})
+	Get a specific word with all intervals:
+		db.words.find({word:"word"})
+	Get all words with greater count then 100. (show only word,count,countryName,countryCount)
+		db.words.find({count:{$gt:100}},{_id:false,beginDate:true,word:true,count:true,"country.countryName":true,"country.count":true}).pretty()
+	Gop word by count all time(segmented by interval)
+		db.words.find({word:"Taylor"},{_id:false,word:true,beginDate:true,count:true}).sort({count:-1})
+	
+{
+	"_id" : ObjectId("54623166ccda65d6cfc2df00"),
+	"word" : "test",
+	"beginDate" : 1,
+	"count" : 1,
+	"country" : [
+		{
+			countryName:"Romania" 
+			"count" : 1,
+			"tweetList" : [
+				{
+					"tweetId" : 1,
+					"tweetDate" : 1
+				}
+			]
+	
+		}
+	]
+}
+
+
+
+
+
+
+
+
+
+
