@@ -15,9 +15,9 @@
     </bean>
 
     <camelContext id="camelContext" xmlns="http://camel.apache.org/schema/spring">
-
-
-       <route>
+        <endpoint id="twitterStreamEndpoint"
+                  uri="twitter://streaming/sample?delay=${twitter.stream.delay}&amp;type=${twitter.stream.type}&amp;consumerKey=${twitter.stream.consumerKey}&amp;consumerSecret=${twitter.stream.consumerSecret}&amp;accessToken=${twitter.stream.accessToken}&amp;accessTokenSecret=${twitter.stream.accessTokenSecret}"/>
+        <route>
             <from uri="timer://runOnce?repeatCount=1&amp;delay=3000"/>
             <to uri="bean:nodeManager?method=buildNodes"/>
         </route>
@@ -33,6 +33,13 @@
             </multicast>
         </route>
 
+
+        <route id="masterIncoming" autoStartup="true">
+            <from uri="activemq:queue:MASTER"/>
+            <multicast>
+                <to uri="bean:masterController"/>
+            </multicast>
+        </route>
 
 
         <route id="masterWEBSocket">
@@ -50,6 +57,12 @@
 
         <!--SLAVE -->
 
+
+        <route id="slaveIncoming" autoStartup="true">
+            <from uri="activemq:queue:SLAVE"/>
+            <to uri="bean:slaveController"/>
+        </route>
+
         <route id="slaveTOComponents">
             <from uri="seda:slaveTweetHandler"/>
             <multicast>
@@ -58,7 +71,15 @@
                 <process ref="roTweetProcessor"/>
                 <process ref="saveTweets"/>
                 <process ref="tweetFilterPR"/>
-                <to uri="tweetanalyzer:tweetWords"/>
+                <to uri="bean:nodeStats?method=incrementCount"/>
+                <loadBalance>
+                    <roundRobin/>
+                    <to uri="tweetanalyzer:tweetWords"/>
+                    <to uri="tweetanalyzer:tweetWords"/>
+                    <to uri="tweetanalyzer:tweetWords"/>
+                    <to uri="tweetanalyzer:tweetWords"/>
+                    <to uri="tweetanalyzer:tweetWords"/>
+                </loadBalance>
             </multicast>
         </route>
 

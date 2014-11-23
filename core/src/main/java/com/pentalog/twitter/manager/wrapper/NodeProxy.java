@@ -53,7 +53,41 @@ public class NodeProxy implements Processor {
     }
 
     public void buildProxyOverNode() throws Exception {
+        final String brokerTo = getPathTOProxyJMS(node.getIP(), node.getJMSPort());
+        ActiveMQConfiguration activeMQConfiguration = new ActiveMQConfiguration();
+        activeMQConfiguration.setUseSingleConnection(true);
+        activeMQConfiguration.setUsePooledConnection(false);
+        activeMQConfiguration.setPreserveMessageQos(false);
+        activeMQConfiguration.setAcceptMessagesWhileStopping(false);
+        activeMQConfiguration.setConnectionFactory(new PooledConnectionFactory() {
+            {
+                setConnectionFactory(new ActiveMQConnectionFactory() {
+                    {
+                        setBrokerURL(brokerTo);
+                        setUseAsyncSend(true);
+                        setCopyMessageOnSend(false);
+                        setCloseTimeout(1000);
+                    }
 
+                });
+                setMaxConnections(1);
+            }
+        });
+        // activeMQConfiguration.set
+        camelContext.addComponent(node.getUuid(), new ActiveMQComponent(activeMQConfiguration));
+        LOGGER.warn("Added ActiveMQComponent to: " + getPathTOProxyJMS(node.getIP(), node.getJMSPort()));
+        //build the proxies depending on nodeType;
+        if (this.node.isMaster()) {
+            this.remoteNodeController = new ProxyBuilder(camelContext).
+                    endpoint(node.getUuid() + ":queue:" + RouteConstants.MASTER_QUEUE).
+                    build(IMasterNodeController.class);
+            LOGGER.warn("Created MasterProxy: " + node.getUuid());
+        } else {
+            this.remoteNodeController = new ProxyBuilder(camelContext).
+                    endpoint(node.getUuid() + ":queue:" + RouteConstants.SLAVE_QUEUE).
+                    build(ISlaveNodeController.class);
+            LOGGER.warn("Created SlaveProxy" + node.getUuid());
+        }
     }
 
     public void clearProxy() {
@@ -90,7 +124,19 @@ public class NodeProxy implements Processor {
 
     @Override
     public void process(Exchange exchange) throws Exception {
-
+        if (node.isSlave()) {
+            if (exchange.getIn().getBody() instanceof Status) {
+                try {
+                    getSlaveController().handleTweet((twitter4j.Status) exchange.getIn().getBody());
+                } catch (Exception e) {
+                    LOGGER.warn("Node crashed: " + node.getUuid(), e);
+                    currentNodeMasterController.removeNode(node.getUuid());
+                    throw new SlaveCrashedException(e);
+                }
+            } else {
+                throw new BadMessageException(exchange.getIn().getBody().toString());
+            }
+        }
     }
 
     public Node getNode() {

@@ -29,3 +29,8 @@ db.words.aggregate([
 
 
    http://10.10.0.181:8081/
+
+   http://10.10.0.181:8081/charts
+
+
+   https://github.com/mikibrv/twitter.trends
