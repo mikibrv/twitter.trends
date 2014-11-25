@@ -28,9 +28,9 @@ db.words.aggregate([
    db.allTweets.find({"ID":536070893240602624});
 
 
-   http://10.10.0.181:8081/
+   http://10.185.40.98:8081/
 
-   http://10.10.0.181:8081/charts
+   http://10.185.40.98:8081/charts
 
 
    https://github.com/mikibrv/twitter.trends
