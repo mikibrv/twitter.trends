@@ -3,7 +3,6 @@ package com.pentalog.twitter.manager;
 import com.pentalog.twitter.interfaces.IMasterNodeController;
 import com.pentalog.twitter.interfaces.ISlaveNodeController;
 import com.pentalog.twitter.manager.enums.RouteConstants;
-import com.pentalog.twitter.master.TweetBalancer;
 import com.pentalog.twitter.pojo.Node;
 import com.pentalog.twitter.processor.TweetFilterProcessor;
 import com.pentalog.twitter.util.NodeUtil;
@@ -14,7 +13,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
-import java.util.List;
 
 /**
  * User: mcsere

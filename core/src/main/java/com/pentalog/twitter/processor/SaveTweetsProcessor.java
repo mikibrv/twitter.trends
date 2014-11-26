@@ -24,18 +24,7 @@ public class SaveTweetsProcessor implements Processor {
     public void process(Exchange exchange) throws Exception {
         if (exchange.getIn().getBody() instanceof Status) {
             Status tweet = (Status) exchange.getIn().getBody();
-            BasicDBObject tweetStringObj = new BasicDBObject();
-            tweetStringObj.append("ID", tweet.getId());
-            tweetStringObj.append("USER", tweet.getUser().getScreenName());
-            tweetStringObj.append("TIME", tweet.getCreatedAt().getTime());
-            String tweetJson = "";
-            try {
-                tweetJson = new Gson().toJson(tweet);
-            } catch (Exception e) {
-                //do nothing;
-            }
-            tweetStringObj.append("tweet", tweetJson);
-            producer.sendBody(tweetStringObj);
+            producer.sendBody(tweet);
         }
     }
 }

@@ -1,5 +1,8 @@
 package com.pentalog.twitter.mongo;
 
+import twitter4j.HashtagEntity;
+import twitter4j.Status;
+
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
@@ -27,7 +30,22 @@ public class MongoUtils {
 
 		List<String> words = new ArrayList<String>();
 		String[] split = tweetText.split("\\P{L}+");
-		Collections.addAll(words, split);
+		for(String word:split) {
+			words.add(word.toLowerCase());
+		}
+		return words;
+	}
+
+	public static List<String> getWordsFromTweet(Status tweet) {
+
+		String tweetText = tweet.getText();
+		HashtagEntity[] hashtagEntities = tweet.getHashtagEntities();
+		List<String> hashTags = new ArrayList<>();
+		for (HashtagEntity hashtagEntity : hashtagEntities) {
+			hashTags.add(hashtagEntity.getText().toLowerCase());
+		}
+		List<String> words = MongoUtils.splitTweetWords(tweetText);
+		words.addAll(hashTags);
 		return words;
 	}
 

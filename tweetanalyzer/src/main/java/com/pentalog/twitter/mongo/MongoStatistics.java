@@ -1,85 +1,74 @@
 package com.pentalog.twitter.mongo;
 
-import com.mongodb.BasicDBList;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBObject;
 import com.mongodb.MongoException;
-import com.pentalog.twitter.model.mongoObjects.TweetInfoLight;
+import com.pentalog.twitter.model.mongoObjects.MongoProperties;
 import com.pentalog.twitter.model.mongoObjects.Word;
-import org.apache.camel.Message;
-import org.apache.camel.impl.DefaultMessage;
-import twitter4j.HashtagEntity;
+import com.pentalog.twitter.mongo.MongoQueries.MongoOperations;
 import twitter4j.Status;
 
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Collections;
-import java.util.Date;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.concurrent.ExecutionException;
 
 /**
  * Created by agherasim on 17/11/2014.
  */
 public class MongoStatistics {
 
-	private static MongoQueries mongoQueries;
 
-	private static MongoConnection mongoConnection = MongoConnection.getInstance();
 
-	private static boolean isInit() {
+	public static MongoStatistics init(MongoProperties mongoProperties) {
 
-		if (!MongoStatistics.mongoQueries.isInit()) {
-			return false;
-		}
-		return true;
-	}
-
-	private static void init() {
-
-		MongoStatistics.mongoQueries.init(MongoStatistics.mongoConnection.getMongoClient());
+		MongoOperations.init(new MongoConnection(mongoProperties).getMongoClient());
+		return null;
 	}
 
 	public static void processWords(Status tweet) {
 
-		if (!isInit()) {
-			init();
-		}
-		MongoQueries.processWords(tweet);
+		checkInit();
+		MongoOperations.processWords(tweet);
 	}
 
-	public static List<Word> getWordsStatisticsByIntervals(long interval) {
+	//TODO: COMPLETE THIS FUNCTION!!!!!
+	public static DBObject getGraphData(long minBeginDate, long maxBeginDate, int skip, int limit) {
 
-		if (!isInit()) {
-			init();
-		}
-		return MongoQueries.getWords(interval);
+
+		checkInit();
+		DBObject topWordsByCountForIntervals = MongoOperations
+						.getTopWordsByCountForIntervals(minBeginDate, maxBeginDate, skip, limit);
+		return topWordsByCountForIntervals;
 	}
 
-	public static DBObject getWordForAllIntervals(String word) {
 
-		if (!isInit()) {
-			init();
-		}
-		return MongoQueries.getWordForAllIntervals(word);
-	}
+	//	public static List<Word> getWordsStatisticsByIntervals(long interval) {
+//
+//		checkInit();
+//		return MongoOperations.getWords(interval);
+//	}
+//
+//	public static DBObject getWordForAllIntervals(String word) {
+//
+//		checkInit();
+//		return MongoOperations.getWordForAllIntervals(word);
+//	}
 
 //	public static List<String> getTopWordsCountAllTime(int start, int stop) {
 //
-//		if (!isInit()) {
-//			init();
-//		}
+//		checkInit();
 //		return MongoQueries.getTopWordsCountAllTime(start, stop);
 //	}
 
-	public static DBObject getGraphData(int start, int stop) {
 
+	private static void checkInit() throws MongoException{
 		if (!isInit()) {
-			init();
+			throw new MongoException("You need to call MongoStatistics.init(mongoProperties) first!!!");
 		}
+	}
+	private static boolean isInit() {
 
-		return MongoQueries.getTopWordsCountAllTime(start, stop);
+		if (!MongoOperations.isInit()) {
+			return false;
+		}
+		return true;
 	}
 }

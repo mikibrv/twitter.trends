@@ -4,17 +4,12 @@ package com.pentalog.twitter.manager.impl;
 import com.google.gson.Gson;
 import com.pentalog.twitter.interfaces.IMasterNodeController;
 import com.pentalog.twitter.manager.AbstractNodeController;
-import com.pentalog.twitter.manager.enums.RouteConstants;
 import com.pentalog.twitter.manager.wrapper.NodeProxy;
 import com.pentalog.twitter.master.TweetBalancer;
 import com.pentalog.twitter.pojo.Node;
 import com.pentalog.twitter.pojo.TweetFilter;
 import org.apache.camel.EndpointInject;
 import org.apache.camel.ProducerTemplate;
-import org.apache.camel.Route;
-
-import java.util.UUID;
-import java.util.concurrent.TimeUnit;
 
 /**
  * User: mcsere
@@ -29,7 +24,7 @@ public class MasterNodeController extends AbstractNodeController implements IMas
 
     TweetBalancer tweetBalancer;
 
-    @EndpointInject(uri = "seda:masterDisplayFilteredTweets?size=1000")
+    @EndpointInject(uri = "seda:masterDisplayFilteredTweets?size=10000")
     ProducerTemplate producer;
 
 

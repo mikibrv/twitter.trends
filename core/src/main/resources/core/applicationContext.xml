@@ -50,8 +50,6 @@
     </bean>
 
 
-    <bean id="mongoConnectionBean" class="com.mongodb.Mongo">
-        <constructor-arg index="0" value="79.141.1.187"/>
-    </bean>
+
 
 </beans>

@@ -1,5 +1,6 @@
 package com.pentalog.twitter;
 
+import com.pentalog.twitter.model.mongoObjects.MongoProperties;
 import org.apache.camel.Consumer;
 import org.apache.camel.Processor;
 import org.apache.camel.Producer;
@@ -12,13 +13,14 @@ import org.apache.camel.spi.UriEndpoint;
 @UriEndpoint(scheme = "tweetanalyzer", consumerClass = TweetAnalyzerConsumer.class)
 public class TweetAnalyzerEndpoint extends DefaultEndpoint {
 
-	public TweetAnalyzerEndpoint() {
+	private MongoProperties mongoProperties;
 
-	}
+	public TweetAnalyzerEndpoint() {	}
 
-	public TweetAnalyzerEndpoint(String uri, TweetAnalyzerComponent component) {
+	public TweetAnalyzerEndpoint(String uri, TweetAnalyzerComponent component, MongoProperties mongoProperties) {
 
 		super(uri, component);
+		this.mongoProperties = mongoProperties;
 	}
 
 	public TweetAnalyzerEndpoint(String endpointUri) {
@@ -39,5 +41,10 @@ public class TweetAnalyzerEndpoint extends DefaultEndpoint {
 	public boolean isSingleton() {
 
 		return false;
+	}
+
+	public MongoProperties getMongoProperties() {
+
+		return mongoProperties;
 	}
 }

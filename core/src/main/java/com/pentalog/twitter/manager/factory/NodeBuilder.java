@@ -43,9 +43,9 @@ public class NodeBuilder {
         Node node = null;
 
         NodeType nodeType = isMaster ? NodeType.MASTER : NodeType.SLAVE;
-
+		LOGGER.warn("==============================================================");
         LOGGER.warn("Creating node as " + nodeType + " with port : " + jmsPort);
-
+		LOGGER.warn("==============================================================");
         try {
             node = new Node(NODE_PREFIX + UUID.randomUUID().toString().replaceAll("-", ""), InetAddress.getLocalHost().getHostAddress());
             node.setType(nodeType);

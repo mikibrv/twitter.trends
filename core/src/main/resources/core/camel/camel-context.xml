@@ -7,12 +7,20 @@
        http://camel.apache.org/schema/spring
        http://camel.apache.org/schema/spring/camel-spring.xsd">
 
+    <import resource="mongoConnection.xml"/>
+
     <bean id="testTwitterBeanProcessor" class="com.pentalog.twitter.processor.TwitterBeanProcessor"/>
     <bean id="httpProcessor" class="com.pentalog.twitter.processor.HTTPProcessor"/>
     <!-- camel activemq http://camel.apache.org/using-camelproxy.html component to connect to the broker   -->
     <bean id="activemq" class="org.apache.activemq.camel.component.ActiveMQComponent">
         <property name="brokerURL" value="tcp://${cluster.local.ip}:${cluster.local.jms.port}"/>
     </bean>
+
+    <bean id="tweetAnalyzerComponent" class="com.pentalog.twitter.TweetAnalyzerComponent">
+        <constructor-arg ref="mongoProp"/>
+    </bean>
+
+
 
     <camelContext id="camelContext" xmlns="http://camel.apache.org/schema/spring">
         <endpoint id="twitterStreamEndpoint"
@@ -43,7 +51,7 @@
 
 
         <route id="masterWEBSocket">
-            <from uri="seda:masterDisplayFilteredTweets?size=1000"/>
+            <from uri="seda:masterDisplayFilteredTweets?size=10000"/>
             <to uri="websocket:camel-tweet?sendToAll=true&amp;host=${local.ip}&amp;port=${local.websocket.port}"/>
         </route>
 
@@ -66,7 +74,7 @@
         <route id="slaveTOComponents">
             <from uri="seda:slaveTweetHandler"/>
             <multicast>
-                <to uri="log:com.pentalog.twitter"/>
+                <!--<to uri="log:com.pentalog.twitter"/>-->
                 <process ref="testTwitterBeanProcessor"/>
                 <process ref="roTweetProcessor"/>
                 <process ref="saveTweets"/>
@@ -100,7 +108,7 @@
         </route>
 
         <route>
-            <from uri="jetty:http://${local.ip}:${local.jetty.port}/getGraph/{}/{}"/>
+            <from uri="jetty:http://${local.ip}:${local.jetty.port}/getGraph/{}/{}/{}/{}"/>
             <to uri="tweetanalyzer:getGraph"/>
         </route>
 

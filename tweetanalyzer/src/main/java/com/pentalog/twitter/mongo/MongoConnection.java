@@ -1,7 +1,10 @@
 package com.pentalog.twitter.mongo;
 
+import com.mongodb.Mongo;
 import com.mongodb.MongoClient;
+import com.pentalog.twitter.model.mongoObjects.MongoProperties;
 
+import javax.annotation.Resource;
 import java.net.UnknownHostException;
 
 /**
@@ -9,24 +12,19 @@ import java.net.UnknownHostException;
  */
 public class MongoConnection {
 
-	private static MongoConnection instance;
-	private MongoClient mongoClient;
+	private static MongoClient mongoClient;
 
-	private MongoConnection(){
-		this.connect();
+	public MongoConnection(MongoProperties mongoProperties){
+		this.connect(mongoProperties);
 	}
 
-	public static MongoConnection getInstance(){
-		if(instance==null){
-			instance=new MongoConnection();
-		}
-		return instance;
-	}
 
-	private void connect(){
+
+	private void connect(MongoProperties mongoProperties){
 
 		try {
-			mongoClient = new MongoClient( "79.141.1.187" );
+			if(mongoClient==null)
+				mongoClient = new MongoClient(mongoProperties.getHost(),mongoProperties.getPort());
 		}
 		catch (UnknownHostException e) {
 			e.printStackTrace();
@@ -37,4 +35,5 @@ public class MongoConnection {
 
 		return mongoClient;
 	}
+
 }

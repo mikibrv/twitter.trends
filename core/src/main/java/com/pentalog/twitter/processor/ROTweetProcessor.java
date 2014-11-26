@@ -49,16 +49,7 @@ public class ROTweetProcessor implements Processor {
                 //do nothing;
             }
             if (isFromRO) {
-                BasicDBObject tweetStringObj = new BasicDBObject();
-                tweetStringObj.append("tweet", tweet.getUser().getName() + " :==> " + tweet.getText());
-                String tweetJson = "";
-                try {
-                    tweetJson = new Gson().toJson(tweet);
-                } catch (Exception e) {
-                    //do nothing;
-                }
-                tweetStringObj.append("fullTweet", tweetJson);
-                producer.sendBody(tweetStringObj);
+                producer.sendBody(tweet);
             }
         }
     }

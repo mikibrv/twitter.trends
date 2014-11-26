@@ -1,5 +1,7 @@
 package com.pentalog.twitter.pojo;
 
+import java.util.Date;
+
 /**
  * User: mcsere
  * Date: 11/20/2014
@@ -15,7 +17,8 @@ public class NodeStats {
 
     public synchronized void incrementCount() {
         this.countProcessed++;
-    }
+		System.out.println(new Date().toString()+" "+countProcessed);
+	}
 
     public void setCountProcessed(int countProcessed) {
         this.countProcessed = countProcessed;
