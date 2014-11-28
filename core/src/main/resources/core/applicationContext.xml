@@ -17,6 +17,7 @@
             <list>
                 <value>classpath:core/cluster.properties</value>
                 <value>classpath:core/twitter.properties</value>
+                <value>classpath:core/mongo.properties</value>
             </list>
         </property>
         <property name="ignoreUnresolvablePlaceholders" value="true"/>
@@ -36,6 +37,7 @@
 
     <import resource="activemq/activemq-broker.xml"/>
     <import resource="camel/camel-context.xml"/>
+    <import resource="camel/mongoConnection.xml"/>
 
     <context:component-scan base-package="com.pentalog.twitter"/>
     <context:annotation-config/>

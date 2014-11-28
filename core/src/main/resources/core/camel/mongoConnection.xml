@@ -3,14 +3,17 @@
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
 
-
+    <!--Bean for tweetanalyzer-->
     <bean id="mongoProp" class="com.pentalog.twitter.model.mongoObjects.MongoProperties">
-        <property name="host" value="10.185.40.98"/>
-        <property name="port" value="27017"/>
+        <property name="host" value="${mongo.IP}"/>
+        <property name="port" value="${mongo.port}"/>
     </bean>
 
+    <!--Bean for camel routs-->
     <bean id="mongoConnectionBean" class="com.mongodb.MongoClient">
-        <constructor-arg index="0" value="10.185.40.98" type="java.lang.String"/>
-        <constructor-arg index="1" value="27017" type="int"/>
+        <constructor-arg index="0" value="${mongo.IP}" type="java.lang.String"/>
+        <constructor-arg index="1" value="${mongo.port}" type="int"/>
     </bean>
 </beans>
+
+

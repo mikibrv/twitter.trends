@@ -104,27 +104,4 @@ public class MongoQueriesFindings extends MongoQueriesAbstract {
 		return results;
 	}
 
-
-
-
-
-	//	/**
-	//	 * Query: db.words.find({beginDate:someDate})
-	//	 * @param beginDate
-	//	 * @return
-	//	 */
-	//	public static List<DBObject> findWordsByBeginDate(long beginDate){
-	//
-	//		DBCollection wordCollection = getCollectionStatisticsWords();
-	//		DBObject query = new BasicDBObject();
-	//		query.put("beginDate", beginDate);
-	//		DBCursor dbCursor = wordCollection.find(query);
-	//		List<DBObject> results=new ArrayList<>();
-	//		if(dbCursor!=null){
-	//			while(dbCursor.hasNext()){
-	//				results.add(dbCursor.next());
-	//			}
-	//		}
-	//		return results;
-	//	}
 }

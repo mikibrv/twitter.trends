@@ -9,18 +9,24 @@ import java.util.Date;
  */
 public class NodeStats {
 
-    private int countProcessed;
 
-    public int getCountProcessed() {
-        return countProcessed;
-    }
+	private int countProcessed;
 
-    public synchronized void incrementCount() {
-        this.countProcessed++;
-		System.out.println(new Date().toString()+" "+countProcessed);
+	public int getCountProcessed() {
+
+		return countProcessed;
 	}
 
-    public void setCountProcessed(int countProcessed) {
-        this.countProcessed = countProcessed;
-    }
+	public synchronized void incrementCount() {
+
+		this.countProcessed++;
+		if (countProcessed % 1000 == 0) {
+			System.out.println(new Date().toString() + " " + countProcessed);
+		}
+	}
+
+	public void setCountProcessed(int countProcessed) {
+
+		this.countProcessed = countProcessed;
+	}
 }

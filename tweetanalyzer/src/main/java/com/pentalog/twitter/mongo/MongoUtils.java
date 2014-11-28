@@ -3,6 +3,7 @@ package com.pentalog.twitter.mongo;
 import twitter4j.HashtagEntity;
 import twitter4j.Status;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
@@ -61,5 +62,24 @@ public class MongoUtils {
 		}
 
 		return ret;
+	}
+
+	public static List<Long> addAllHourlyIntervalsIntoList( long minInterval, long maxInterval){
+		List<Long> intervals=new ArrayList<>();
+		for(long i=trimDateToHours(minInterval);i<=maxInterval;i+=3600000){
+			intervals.add(i);
+		}
+		return intervals;
+	}
+
+	public static List<String> addAllHourlyIntervalsIntoListStrings(long minBeginDate, long maxBeginDate) {
+		List<String> results=new ArrayList<>();
+		List<Long> intervals = addAllHourlyIntervalsIntoList(minBeginDate, maxBeginDate);
+		for(long interval:intervals){
+			Date date = new Date();
+			date.setTime(interval);
+			results.add(new SimpleDateFormat("HH:MM d.m.yy").format(date));
+		}
+		return results;
 	}
 }

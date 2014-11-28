@@ -1,5 +1,6 @@
 package com.pentalog.twitter.mongo;
 
+import com.mongodb.BasicDBList;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBObject;
 import com.mongodb.MongoException;
@@ -8,6 +9,7 @@ import com.pentalog.twitter.model.mongoObjects.Word;
 import com.pentalog.twitter.mongo.MongoQueries.MongoOperations;
 import twitter4j.Status;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -32,31 +34,37 @@ public class MongoStatistics {
 	//TODO: COMPLETE THIS FUNCTION!!!!!
 	public static DBObject getGraphData(long minBeginDate, long maxBeginDate, int skip, int limit) {
 
-
 		checkInit();
-		DBObject topWordsByCountForIntervals = MongoOperations
+		DBObject result=new BasicDBObject();
+		List<DBObject> topWordsByCountForIntervals = MongoOperations
 						.getTopWordsByCountForIntervals(minBeginDate, maxBeginDate, skip, limit);
-		return topWordsByCountForIntervals;
+		List<Long> categories=MongoUtils.addAllHourlyIntervalsIntoList(minBeginDate,maxBeginDate);
+		List<DBObject> series=new ArrayList<>();
+
+		for(DBObject word:topWordsByCountForIntervals){
+			BasicDBObject wrapperWord = new BasicDBObject("name", word.get("word"));
+			List<Integer> data=new ArrayList<>();
+			List<DBObject> intervals = (List<DBObject>) word.get("intervals");
+			for(Long beginDate:categories){
+				int count=0;
+				for(DBObject interval:intervals){
+					long intervalBeginDate = (long) interval.get("beginDate");
+					if(beginDate.equals(intervalBeginDate)){
+						count = (int) interval.get("count");
+						break;
+					}
+				}
+				data.add(count);
+			}
+			wrapperWord.put("data", data);
+
+			series.add(wrapperWord);
+		}
+		List<String> categoriesStrings = MongoUtils.addAllHourlyIntervalsIntoListStrings(minBeginDate, maxBeginDate);
+		result.put("categories",categoriesStrings);
+		result.put("series",series);
+		return result;
 	}
-
-
-	//	public static List<Word> getWordsStatisticsByIntervals(long interval) {
-//
-//		checkInit();
-//		return MongoOperations.getWords(interval);
-//	}
-//
-//	public static DBObject getWordForAllIntervals(String word) {
-//
-//		checkInit();
-//		return MongoOperations.getWordForAllIntervals(word);
-//	}
-
-//	public static List<String> getTopWordsCountAllTime(int start, int stop) {
-//
-//		checkInit();
-//		return MongoQueries.getTopWordsCountAllTime(start, stop);
-//	}
 
 
 	private static void checkInit() throws MongoException{

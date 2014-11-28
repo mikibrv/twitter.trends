@@ -5,6 +5,10 @@ package com.pentalog.twitter.model.mongoObjects;
  */
 public class MongoProperties {
 
+	private String host;
+
+	private String port;
+
 	public String getHost() {
 
 		return host;
@@ -15,16 +19,13 @@ public class MongoProperties {
 		this.host = host;
 	}
 
-	public int getPort() {
+	public int getPort() throws NumberFormatException {
 
-		return port;
+		return Integer.parseInt(port);
 	}
 
-	public void setPort(int port) {
+	public void setPort(String port) {
 
 		this.port = port;
 	}
-
-	private String host;
-	private int port;
 }

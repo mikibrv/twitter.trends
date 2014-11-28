@@ -11,7 +11,8 @@
     </appender>
 
 
-    <!--If you want to enable logging for the application but wish to disable logging for a specific package then use this, where org.jboss is the package for which you wish to disable logging.-->
+    <!--If you want to enable logging for the application but wish to disable logging for a specific package then
+    use this, where org.jboss is the package for which you wish to disable logging.-->
     <category name="org.apache.camel">
         <priority value="off"/>
     </category>

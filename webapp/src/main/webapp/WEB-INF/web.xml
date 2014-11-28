@@ -10,13 +10,7 @@
         <servlet-class>
             org.springframework.web.servlet.DispatcherServlet
         </servlet-class>
-
-        <init-param>
-            <param-name>dispatchOptionsRequest</param-name>
-            <param-value>true</param-value>
-        </init-param>
         <load-on-startup>1</load-on-startup>
-
     </servlet>
 
     <servlet-mapping>
@@ -24,16 +18,10 @@
         <url-pattern>/</url-pattern>
     </servlet-mapping>
 
-    <context-param>
-        <param-name>contextConfigLocation</param-name>
-        <param-value>/WEB-INF/mvc-dispatcher-servlet.xml</param-value>
-    </context-param>
 
-    <listener>
-        <listener-class>
-            org.springframework.web.context.ContextLoaderListener
-        </listener-class>
-    </listener>
-
+    <error-page>
+        <error-code>404</error-code>
+        <location>/static/error/404error.ftl</location>
+    </error-page>
 
 </web-app>

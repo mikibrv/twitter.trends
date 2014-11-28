@@ -23,7 +23,6 @@ public class ROTweetProcessor implements Processor {
     private List<String> toMatch = new ArrayList<String>() {{
         add("BRASOV");
         add("ROMANIA");
-        add("ALTFEST");
     }};
 
     @EndpointInject(uri = "seda:tweetsAboutRO")
