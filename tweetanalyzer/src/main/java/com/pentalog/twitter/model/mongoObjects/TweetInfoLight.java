@@ -3,6 +3,8 @@ package com.pentalog.twitter.model.mongoObjects;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBObject;
 
+import java.util.Date;
+
 /**
  * Created by agherasim on 14/11/2014.
  */
@@ -14,7 +16,7 @@ public class TweetInfoLight extends BasicDBObject {
 
 	private String tweetDateField;
 
-	private long tweetDateValue;
+	private Date tweetDateValue;
 
 	public TweetInfoLight() {
 
@@ -30,11 +32,11 @@ public class TweetInfoLight extends BasicDBObject {
 			tweetIdField = "tweetId";
 			tweetDateField = "tweetDate";
 			setTweetIdValue((long) tweetInfo.get("tweetId"));
-			setTweetDateValue((long) tweetInfo.get("tweetDate"));
+			setTweetDateValue((Date) tweetInfo.get("tweetDate"));
 		}
 	}
 
-	public void setTweetDateValue(long tweetDateValue) {
+	public void setTweetDateValue(Date tweetDateValue) {
 
 		this.tweetDateValue = tweetDateValue;
 		this.remove(tweetDateField);
@@ -48,7 +50,7 @@ public class TweetInfoLight extends BasicDBObject {
 		this.append(tweetIdField, tweetIdValue);
 	}
 
-	public long getTweetDateValue() {
+	public Date getTweetDateValue() {
 
 		return tweetDateValue;
 	}

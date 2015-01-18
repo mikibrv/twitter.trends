@@ -103,7 +103,7 @@
 
         <route>
             <from uri="jetty:http://${local.ip}:${local.jetty.port}/stats"/>
-            <to uri="bean:nodeStats?method=getCountProcessed"/>
+            <to uri="bean:nodeStats?method=toString"/>
         </route>
 
         <route>

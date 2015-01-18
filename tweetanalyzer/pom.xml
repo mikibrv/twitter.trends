@@ -65,7 +65,6 @@
             <artifactId>camel-mongodb</artifactId>
         </dependency>
 
-
     </dependencies>
 
     <build>

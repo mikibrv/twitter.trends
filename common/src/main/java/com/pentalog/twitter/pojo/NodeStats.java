@@ -7,7 +7,7 @@ import java.util.Date;
  * Date: 11/20/2014
  * Time: 11:29 PM
  */
-public class NodeStats {
+public class NodeStats{
 
 
 	private int countProcessed;
@@ -28,5 +28,18 @@ public class NodeStats {
 	public void setCountProcessed(int countProcessed) {
 
 		this.countProcessed = countProcessed;
+	}
+
+	@Override public String toString() {
+
+		StringBuilder stringBuilder=new StringBuilder();
+		stringBuilder.append("{")
+						.append("countProcessed:").append(getCountProcessed())
+						.append("")
+
+
+						.append("}");
+
+		return super.toString();
 	}
 }

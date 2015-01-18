@@ -16,7 +16,6 @@ public class TweetAnalyzerEndpoint extends DefaultEndpoint {
 	private MongoProperties mongoProperties;
 
 	public TweetAnalyzerEndpoint() {	}
-
 	public TweetAnalyzerEndpoint(String uri, TweetAnalyzerComponent component, MongoProperties mongoProperties) {
 
 		super(uri, component);

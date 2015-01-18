@@ -9,6 +9,7 @@ import com.pentalog.twitter.mongo.MongoUtils;
 import twitter4j.Status;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -22,12 +23,12 @@ public class MongoOperations extends MongoQueriesAbstract {
 			TweetInfoLight tweetInfo = new TweetInfoLight();
 			long tweetId = tweet.getId();
 			tweetInfo.setTweetIdValue(tweetId);
-			tweetInfo.setTweetDateValue(tweet.getCreatedAt().getTime());
+			tweetInfo.setTweetDateValue(new Date(tweet.getCreatedAt().getTime()));
 			String countryName = "Not mentioned!";
 			if (tweet.getPlace() != null && tweet.getPlace().getCountry() != null) {
 				countryName = tweet.getPlace().getCountry();
 			}
-			long beginDate = MongoUtils.trimDateToHours(tweetInfo.getTweetDateValue());
+			long beginDate = MongoUtils.trimDateToHours(tweetInfo.getTweetDateValue().getTime());
 			List<String> wordsFromTweet = MongoUtils.getWordsFromTweet(tweet);
 			registerWords(wordsFromTweet, beginDate, countryName, tweetInfo);
 		}

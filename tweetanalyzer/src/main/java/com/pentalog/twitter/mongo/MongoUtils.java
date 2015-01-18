@@ -78,7 +78,7 @@ public class MongoUtils {
 		for(long interval:intervals){
 			Date date = new Date();
 			date.setTime(interval);
-			results.add(new SimpleDateFormat("HH:MM d.m.yy").format(date));
+			results.add(new SimpleDateFormat("HH:MM d.MMM.yy").format(date));
 		}
 		return results;
 	}
