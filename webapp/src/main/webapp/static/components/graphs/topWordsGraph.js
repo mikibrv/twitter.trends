@@ -1,37 +1,46 @@
 $(document).ready(function () {
     $('#topWordsGraph').click(function () {
-        var i =0;
-        setInterval(function(){
-            $.ajax({
-                type: 'GET',
-                contentType: "application/json; charset=utf-8",
-                dataType: "json",
-                url:"/twitter/home/getGraph/",
-                success:function(result){
-                    console.log("A MERS!!!!");
-                    console.log(result);
-                    console.log(i++);
 
-                    $('#containerTopWordsGraph').highcharts({
-                        chart: {
-                            type: 'spline'
-                        },
+        var element = document.getElementById('containerTopWordsGraph');
+
+        var style = element.style;
+        style.width= "1600px";
+        style.height = "400px";
+
+        callAjax();
+        setInterval(function(){
+            callAjax();
+        },10*1000);
+    });
+
+
+    function callAjax(){
+        $.ajax({
+            type: 'GET',
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            url:"/twitter/home/getGraph/",
+            success:function(result){
+                $('#containerTopWordsGraph').highcharts({
+                    chart: {
+                        type: 'spline'
+                    },
+                    title: {
+                        text: 'Top words through time'
+                    },
+                    yAxis: {
                         title: {
-                            text: 'Top words through time'+i
+                            text: 'Count'
                         },
-                        yAxis: {
-                            title: {
-                                text: 'Count'
-                            },
-                            min: 0
-                        },
-                        tooltip: {
-                            headerFormat: '<b>{series.name}</b><br>',
-                            pointFormat: '{point.y:.0f}'
-                        },
-                        xAxis: {"categories":result.categories
+                        min: 0
+                    },
+                    tooltip: {
+                        headerFormat: '<b>{series.name}</b><br>',
+                        pointFormat: '{point.y:.0f}'
+                    },
+                    xAxis: {"categories":result.categories
 //                            "categories" : [ 1417017600000 , 1417021200000 , 1417024800000 , 1417028400000 , 1417032000000 , 1417035600000 , 1417039200000 , 1417042800000 , 1417046400000 , 1417050000000 , 1417053600000 , 1417057200000 , 1417060800000 , 1417064400000 , 1417068000000 , 1417071600000 , 1417075200000 , 1417078800000 , 1417082400000 , 1417086000000 , 1417089600000 , 1417093200000 , 1417096800000 , 1417100400000 , 1417104000000]
-                        },"series":result.series
+                    },"series":result.series
 //                        "series": [
 //                            { "name": "http", "data": [ 8366 , 9039 , 9463 , 6274 , 893 , 7377 , 8598 , 8884 , 7698 , 7666 , 8689 , 8039 , 7493 , 7865 , 5847 , 2443 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0]} ,
 //                            { "name": "love", "data": [ 1271 , 1399 , 1445 , 1011 , 203 , 1486 , 1627 , 1383 , 1510 , 1613 , 1547 , 1616 , 1326 , 1535 , 998 , 539 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0]} ,
@@ -44,14 +53,12 @@ $(document).ready(function () {
 //                            { "name": "people", "data": [ 793 , 915 , 842 , 614 , 146 , 867 , 873 , 887 , 730 , 809 , 915 , 935 , 852 , 797 , 680 , 321 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0]} ,
 //                            { "name": "today", "data": [ 861 , 839 , 843 , 595 , 165 , 1022 , 686 , 899 , 534 , 612 , 810 , 702 , 708 , 638 , 583 , 290 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0]}
 //                        ]
-                    });
-                },
-                failure:function(){
-                    console.log("N-o MERS!");
-                }
                 });
-        },10*1000);
-    });
+            },
+            failure:function(){
+            }
+        });
+    };
 });
 
 

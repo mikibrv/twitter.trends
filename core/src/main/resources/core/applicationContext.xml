@@ -27,10 +27,10 @@
         <constructor-arg value="${cluster.master.IP}"/>
     </bean>
 
-    <bean id="masterController" class="com.pentalog.twitter.manager.impl.MasterNodeController">
+    <bean id="masterController" class="com.unitbv.twitter.manager.impl.MasterNodeController">
         <constructor-arg ref="currentNode"/>
     </bean>
-    <bean id="slaveController" class="com.pentalog.twitter.manager.impl.SlaveNodeController">
+    <bean id="slaveController" class="com.unitbv.twitter.manager.impl.SlaveNodeController">
         <constructor-arg ref="currentNode"/>
     </bean>
 
@@ -39,7 +39,7 @@
     <import resource="camel/camel-context.xml"/>
     <import resource="camel/mongoConnection.xml"/>
 
-    <context:component-scan base-package="com.pentalog.twitter"/>
+    <context:component-scan base-package="com.unitbv.twitter"/>
     <context:annotation-config/>
 
     <bean id="log4jInitializer" class="org.springframework.beans.factory.config.MethodInvokingFactoryBean">

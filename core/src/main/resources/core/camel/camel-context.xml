@@ -8,14 +8,11 @@
        http://camel.apache.org/schema/spring/camel-spring.xsd">
 
 
-    <!--<bean id="testTwitterBeanProcessor" class="com.pentalog.twitter.processor.TwitterBeanProcessor"/>-->
-    <!--<bean id="httpProcessor" class="com.pentalog.twitter.processor.HTTPProcessor"/>-->
-    <!-- camel activemq http://camel.apache.org/using-camelproxy.html component to connect to the broker   -->
     <bean id="activemq" class="org.apache.activemq.camel.component.ActiveMQComponent">
         <property name="brokerURL" value="tcp://${cluster.local.ip}:${cluster.local.jms.port}"/>
     </bean>
 
-    <bean id="tweetAnalyzerComponent" class="com.pentalog.twitter.TweetAnalyzerComponent">
+    <bean id="tweetAnalyzerComponent" class="com.unitbv.twitter.TweetAnalyzerComponent">
         <constructor-arg ref="mongoProp"/>
     </bean>
 
@@ -24,6 +21,15 @@
     <camelContext id="camelContext" xmlns="http://camel.apache.org/schema/spring">
         <endpoint id="twitterStreamEndpoint"
                   uri="twitter://streaming/sample?delay=${twitter.stream.delay}&amp;type=${twitter.stream.type}&amp;consumerKey=${twitter.stream.consumerKey}&amp;consumerSecret=${twitter.stream.consumerSecret}&amp;accessToken=${twitter.stream.accessToken}&amp;accessTokenSecret=${twitter.stream.accessTokenSecret}"/>
+        <endpoint id="masterWEBSocketUri" uri="websocket:camel-tweet?sendToAll=true&amp;host=${cluster.local.ip}&amp;port=${local.websocket.port}"/>
+        <endpoint id="filterTweetsLauncherUri" uri ="jetty:http://${cluster.local.ip}:${local.jetty.port}/startFiltering/"/>
+        <endpoint id="NodeStatusUri" uri="jetty:http://${cluster.local.ip}:${local.jetty.port}/masterStats"/>
+        <endpoint id="getGraphUri" uri="jetty:http://${cluster.local.ip}:${local.jetty.port}/getGraph/{}/{}/{}/{}"/>
+        <endpoint id="tweetanalyzerStatsUri" uri="jetty:http://${cluster.local.ip}:${local.jetty.port}/stats"/>
+        <endpoint id="getLastTweetUri" uri="jetty:http://${cluster.local.ip}:${local.jetty.port}/getLastTweet"/>
+
+
+
         <route>
             <from uri="timer://runOnce?repeatCount=1&amp;delay=3000"/>
             <to uri="bean:nodeManager?method=buildNodes"/>
@@ -48,17 +54,19 @@
             </multicast>
         </route>
 
-
         <route id="masterWEBSocket">
             <from uri="seda:masterDisplayFilteredTweets?size=10000"/>
-            <to uri="websocket:camel-tweet?sendToAll=true&amp;host=${local.ip}&amp;port=${local.websocket.port}"/>
+            <to uri="masterWEBSocketUri"/>
         </route>
 
-        <route>
-            <from uri="jetty:http://${local.ip}:${local.jetty.port}/startFiltering/"/>
+        <route id="filterTweetsLauncherRoute">
+            <from uri="filterTweetsLauncherUri"/>
             <process ref="filterTweetsLauncher"/>
         </route>
-
+        <route id="NodeStatusRoute">
+            <from uri="NodeStatusUri"/>
+            <to uri="bean:nodeStats?method=toString"/>
+        </route>
 
         <!-- End Of Master -->
 
@@ -73,7 +81,7 @@
         <route id="slaveTOComponents">
             <from uri="seda:slaveTweetHandler"/>
             <multicast>
-                <!--<to uri="log:com.pentalog.twitter"/>-->
+                <!--<to uri="log:com.unitbv.twitter"/>-->
                 <!--<process ref="testTwitterBeanProcessor"/>-->
                 <process ref="roTweetProcessor"/>
                 <process ref="saveTweets"/>
@@ -95,20 +103,24 @@
             <to uri="mongodb:mongoConnectionBean?database=statistics&amp;collection=roTweets&amp;operation=insert"/>
         </route>
 
-
         <route id="saveTweets">
             <from uri="seda:saveTweets"/>
             <to uri="mongodb:mongoConnectionBean?database=statistics&amp;collection=allTweets&amp;operation=insert"/>
         </route>
 
-        <route>
-            <from uri="jetty:http://${local.ip}:${local.jetty.port}/stats"/>
-            <to uri="bean:nodeStats?method=toString"/>
+        <route id="getGraphRoute">
+            <from uri="getGraphUri"/>
+            <to uri="tweetanalyzer:getGraph"/>
         </route>
 
-        <route>
-            <from uri="jetty:http://${local.ip}:${local.jetty.port}/getGraph/{}/{}/{}/{}"/>
-            <to uri="tweetanalyzer:getGraph"/>
+        <route id="tweetanalyzerStatsRoute">
+            <from uri="tweetanalyzerStatsUri"/>
+            <to uri="tweetanalyzer:stats"/>
+        </route>
+
+        <route id="getLastTweetRoute">
+            <from uri="getLastTweetUri"/>
+            <to uri="tweetanalyzer:getLastTweet"/>
         </route>
 
         <!-- END OF SLAVE DECLARATIONS -->

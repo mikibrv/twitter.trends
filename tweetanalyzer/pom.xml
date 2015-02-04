@@ -3,7 +3,7 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <parent>
         <artifactId>twitter.trends</artifactId>
-        <groupId>com.pentalog</groupId>
+        <groupId>com.unitbv</groupId>
         <version>1.0-SNAPSHOT</version>
     </parent>
 
@@ -19,7 +19,7 @@
     <dependencies>
 
         <dependency>
-            <groupId>com.pentalog</groupId>
+            <groupId>com.unitbv</groupId>
             <artifactId>twitter.trends.common</artifactId>
         </dependency>
 
@@ -99,7 +99,7 @@
                 <extensions>true</extensions>
                 <configuration>
                     <instructions>
-                        <Bundle-SymbolicName>com.pentalog.twitter.trends.tweetwords</Bundle-SymbolicName>
+                        <Bundle-SymbolicName>com.unitbv.twitter.trends.tweetwords</Bundle-SymbolicName>
                         <Export-Service>org.apache.camel.spi.ComponentResolver;component=tweetwords</Export-Service>
                     </instructions>
                 </configuration>

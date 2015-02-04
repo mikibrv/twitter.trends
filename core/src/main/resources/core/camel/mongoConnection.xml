@@ -4,7 +4,7 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
 
     <!--Bean for tweetanalyzer-->
-    <bean id="mongoProp" class="com.pentalog.twitter.model.mongoObjects.MongoProperties">
+    <bean id="mongoProp" class="com.unitbv.twitter.model.mongoObjects.MongoProperties">
         <property name="host" value="${mongo.IP}"/>
         <property name="port" value="${mongo.port}"/>
     </bean>
